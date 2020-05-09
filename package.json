@@ -1,0 +1,33 @@
+{
+  "name": "nrs_projekat_tim3_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev-start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RPR-2019/nrs_projekat_tim3_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RPR-2019/nrs_projekat_tim3_backend/issues"
+  },
+  "homepage": "https://github.com/RPR-2019/nrs_projekat_tim3_backend#readme",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.1",
+    "method-override": "^3.0.0",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.3"
+  }
+}
