@@ -2,9 +2,9 @@
   "name": "nrs_projekat_tim3_backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev-start": "nodemon index.js"
+    "dev-start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
     "bcrypt": "^4.0.1",
     "ejs": "^3.1.2",
     "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
     "express-flash": "0.0.2",
     "express-session": "^1.17.1",
     "method-override": "^3.0.0",
