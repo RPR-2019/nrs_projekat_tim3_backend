@@ -8,10 +8,12 @@ var queries = function () {
 
     function getUserByIdImpl(connection, id, callback) {
         connection.query(
-            'SELECT * FROM korisnicki_racuni where id =' + id,
+            'SELECT * FROM korisnicki_racuni where id = ?',
+            [id],
             function (error, results) {
                 if (error) throw error;
                 callback(null, results[0]);
+
             });
     }
 
