@@ -1,13 +1,11 @@
 <h1>Register</h1>
+<% if (messages.error) { %>
+<%= messages.error %>
+<% } %>
 <form action="register" method="POST">
     <div>
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required />
-    </div>
-
-    <div>
         <label for="email">Email</label>
-        <input type="text" id="email" name="email" required />
+        <input type="email" id="email" name="email" required />
     </div>
 
     <div>

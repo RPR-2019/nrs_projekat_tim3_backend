@@ -10,37 +10,36 @@ const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
-var mysql = require('mysql');
-
-var con = mysql.createConnection({
-    host: "127.0.0.1",
-    user: "root",
-    password: "root",
-    database: "skladista"
-});
-
-con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected to db!");
-});
-
-//TODO
-connection.query('SELECT * FROM ', function (error, results, fields) {
-    if (error) throw error;
-    console.log('The solution is: ', results[0].solution);
-});
 
 
 const initializePassport = require('./passport-config');
 const authChecks = require('./authChecks.js');
+const connection = require('./database.js');
 
 initializePassport(
     passport,
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
+    async function (email, callback) {
+        getUsers(
+            connection,
+            function (data) {
+                callback(
+                    data.find(function (user) {
+                        return user.email === email;
+                    })
+                )
+            }
+            //data => data.find(user => user.email == email)
+        )
+    },
+    function (id, callback) {
+        getUserById(
+            connection,
+            id,
+            callback
+        )
+    }
 )
 
-const users = [];
 
 
 
@@ -70,15 +69,14 @@ app.use(express.json());
 
 
 app.get('/', authChecks.checkAuthenticated, (req, res) => {
-    console.log("get /");
-    res.render('index.ejs', { name: req.user.name });
+    res.render('index.ejs', { email: req.user.email });
 });
 
 app.get('/login', authChecks.checkNotAuthenticated, (req, res) => {
     res.render('login.ejs');
 });
 
-app.post('/login', authChecks.checkNotAuthenticated, passport.authenticate('local', {
+app.post('/login', authChecks.checkNotAuthenticated, passport.authenticate('local-login', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
@@ -93,37 +91,49 @@ app.get('/register', authChecks.checkNotAuthenticated, (req, res) => {
     res.render('register.ejs');
 });
 
-app.post('/register', authChecks.checkNotAuthenticated, async (req, res) => {
-    try {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        users.push({
-            id: Date.now().toString(),
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword
-        });
-        console.log(users);
-        res.redirect('/login');
-    } catch {
-        res.redirect('/register');
-    }
-})
+app.post('/register', authChecks.checkNotAuthenticated, passport.authenticate('local-register', {
+    successRedirect: '/login',
+    failureRedirect: '/register',
+    failureFlash: true
+}));
+/*async (req, res) => {
+   try {
+       const salt = await bcrypt.genSalt();
+       const hashedPassword = await bcrypt.hash(req.body.password, salt);
+       let user = {
+           email: req.body.email,
+       }
+       console.log(hashedPassword);
+       connection.query('INSERT INTO korisnicki_racuni(pravo_pristupa, password, email) VALUES' +
+           `(3, "${hashedPassword}", "${user.email}")`, function (error, results, fields) {
+               if (error) console.log(error);
+           });
+       res.redirect('/login');
+   } catch (e) {
+       console.log(e);
+       res.redirect('/register');
+   }
+})*/
 
 app.get('/users', (req, res) => {
-    res.json(users)
+    getUsers(
+        connection,
+        data => res.json(data)
+    );
 })
 
 app.post('/users', async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        users.push({
-            id: Date.now().toString(),
-            name: req.body.name,
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        let user = {
+            pravo_pristupa: req.body.pravo_pristupa,
             email: req.body.email,
             password: hashedPassword
-        });
-        users.push(user)
+        }
+        connection.query('INSERT INTO korisnicki_racuni(pravo_pristupa, password, email) VALUES' +
+            `(${user.pravo_pristupa}, ${user.hashedPassword}, ${user.email})`, function (error, results, fields) {
+                if (error) throw error;
+            });
         res.status(201).send()
     } catch {
         res.status(500).send()
@@ -131,7 +141,10 @@ app.post('/users', async (req, res) => {
 })
 
 app.post('/users/login', async (req, res) => {
-    const user = users.find(user => user.name === req.body.name)
+    const user = getUsers(
+        connection,
+        data => data.find(user => user.email === req.body.email)
+    )
     if (user == null) {
         return res.status(400).send('Cannot find user')
     }
@@ -146,6 +159,23 @@ app.post('/users/login', async (req, res) => {
     }
 })
 
+async function getUsers(connection, callback) {
+    connection.query('SELECT * FROM korisnicki_racuni', function (error, results, fields) {
+        if (error) throw error;
+        //console.log('Racuni: ', results);
+        callback(results);
+    });
+}
+
+function getUserById(connection, id, callback) {
+    connection.query(
+        'SELECT * FROM korisnicki_racuni where id =' + id,
+        function (error, results) {
+            if (error) throw error;
+            //console.log('Racuni: ', results);
+            callback(null, results[0]);
+        });
+}
 
 app.listen(process.env.PORT || 8000);
 console.log("Server started. Listening on port 8000.");

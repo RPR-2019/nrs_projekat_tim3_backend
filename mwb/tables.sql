@@ -217,7 +217,9 @@ DROP TABLE IF EXISTS `skladista`.`korisnicki_racuni` ;
 CREATE TABLE IF NOT EXISTS `skladista`.`korisnicki_racuni` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `osoba_id` INT UNSIGNED NULL,
-  `pravo_pristupa` INT UNSIGNED NULL,
+  `pravo_pristupa` INT UNSIGNED NOT NULL,
+  `password` VARCHAR(150) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `racun_pristup_fk`
     FOREIGN KEY (`pravo_pristupa`)
@@ -230,6 +232,8 @@ CREATE TABLE IF NOT EXISTS `skladista`.`korisnicki_racuni` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `EMAIL_UNIQUE` ON `skladista`.`korisnicki_racuni` (`email` ASC) ;
 
 CREATE UNIQUE INDEX `osoba_id_UNIQUE` ON `skladista`.`korisnicki_racuni` (`osoba_id` ASC) ;
 
@@ -360,3 +364,7 @@ CREATE INDEX `art_nar_fk_idx` ON `skladista`.`artikli_narudzbe` (`narudzba_id` A
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO prava_pristupa(id, naziv) VALUES (1, "ADMIN");
+INSERT INTO prava_pristupa(id, naziv) VALUES (2, "UPOSLENIK");
+INSERT INTO prava_pristupa(id, naziv) VALUES (3, "KUPAC");
