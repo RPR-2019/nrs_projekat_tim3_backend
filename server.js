@@ -10,6 +10,26 @@ const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+    host: "127.0.0.1",
+    user: "root",
+    password: "root",
+    database: "skladista"
+});
+
+con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected to db!");
+});
+
+//TODO
+connection.query('SELECT * FROM ', function (error, results, fields) {
+    if (error) throw error;
+    console.log('The solution is: ', results[0].solution);
+});
+
 
 const initializePassport = require('./passport-config');
 const authChecks = require('./authChecks.js');
