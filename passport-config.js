@@ -27,6 +27,7 @@ function initializePassport(passport, getUserByEmail, getUserById) {
         try {
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(password, salt);
+            console.log("pass:  " + hashedPassword);
             let query = "INSERT INTO korisnicki_racuni(pravo_pristupa, password, email) VALUES (?,?,?)";
             let user = {
                 email: email,
@@ -45,7 +46,6 @@ function initializePassport(passport, getUserByEmail, getUserById) {
                         return done(null, false, { message: 'email vec postoji' })
                     }
                     user.id = results.insertId;
-                    console.log("id:" + results);
                     return done(null, user);
                 });
         } catch (e) {

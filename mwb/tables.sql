@@ -114,18 +114,6 @@ CREATE INDEX `pd_dobacljac_fk_idx` ON `skladista`.`proizvodi_dobavljaca` (`dobav
 
 
 -- -----------------------------------------------------
--- Table `skladista`.`lokacije`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `skladista`.`lokacije` ;
-
-CREATE TABLE IF NOT EXISTS `skladista`.`lokacije` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `naziv_lokacije` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `skladista`.`skladista`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `skladista`.`skladista` ;
@@ -133,16 +121,10 @@ DROP TABLE IF EXISTS `skladista`.`skladista` ;
 CREATE TABLE IF NOT EXISTS `skladista`.`skladista` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `naziv` VARCHAR(45) NULL,
-  `lokacija_id` INT UNSIGNED NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `skladiste_lok_fk`
-    FOREIGN KEY (`lokacija_id`)
-    REFERENCES `skladista`.`lokacije` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `naziv_lokacije` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE INDEX `skladiste_lok_fk_idx` ON `skladista`.`skladista` (`lokacija_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -180,21 +162,14 @@ CREATE TABLE IF NOT EXISTS `skladista`.`osobe` (
   `Ime` VARCHAR(45) NULL,
   `Prezime` VARCHAR(45) NULL,
   `Telefon` VARCHAR(45) NULL,
-  `Email` VARCHAR(45) NULL,
   `datum_zaposljavanja` DATE NULL,
   `JMBG` VARCHAR(45) NOT NULL,
-  `lokacija_id` INT UNSIGNED NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `osobe_lokacije_fk`
-    FOREIGN KEY (`lokacija_id`)
-    REFERENCES `skladista`.`lokacije` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `naziv_lokacije` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `JMBG_UNIQUE` ON `skladista`.`osobe` (`JMBG` ASC) ;
 
-CREATE INDEX `osobe_lokacije_fk_idx` ON `skladista`.`osobe` (`lokacija_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -368,3 +343,15 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 INSERT INTO prava_pristupa(id, naziv) VALUES (1, "ADMIN");
 INSERT INTO prava_pristupa(id, naziv) VALUES (2, "UPOSLENIK");
 INSERT INTO prava_pristupa(id, naziv) VALUES (3, "KUPAC");
+
+
+INSERT INTO osobe(Ime, Prezime, Telefon, datum_zaposljavanja, JMBG, naziv_lokacije)
+VALUES ("Admin", "Admin", "(+387)61/123-456", now(), "2101999175009", "Sarajevo, Safvet-bega Basagica 33");
+
+INSERT INTO korisnicki_racuni(osoba_id, pravo_pristupa, password, email)
+VALUES (
+	1,
+	1,
+	"$2b$10$bXtk.6HbvmPfNXA5HMeJXeK//J2MjWcBGbioO6bjw.NWO2WQErflm",
+	"admin@admin.com"
+	);

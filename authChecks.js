@@ -1,25 +1,35 @@
 var authChecks = function () {
     var checkAuthenticatedImpl = function (req, res, next) {
         if (req.isAuthenticated()) {
-            console.log("redirecting to login1");
             return next();
         }
-        console.log("redirecting to login");
         res.redirect('/login');
     }
 
     function checkNotAuthenticatedImpl(req, res, next) {
         if (req.isAuthenticated()) {
-            console.log("redirecting to homepage");
             return res.redirect('/');
         }
-        console.log("redirecting to login2");
         next();
+    }
+
+    function authRoleImpl(role, req, res, next) {
+        return (req, res, next) => {
+            console.log("pravoPristupa: " + req.user.pravo_pristupa);
+            console.log("role: " + role);
+            if (req.user.pravo_pristupa > role) {
+                res.status(401)
+                return res.send('Only admins can access this!!!')
+            }
+
+            next()
+        }
     }
 
     return {
         checkAuthenticated: checkAuthenticatedImpl,
-        checkNotAuthenticated: checkNotAuthenticatedImpl
+        checkNotAuthenticated: checkNotAuthenticatedImpl,
+        authRole: authRoleImpl
     }
 }();
 

@@ -1,0 +1,54 @@
+<h1>Dodaj korsnika</h1>
+<% if (messages.error) { %>
+<%= messages.error %>
+<% } %>
+<form action="users" method="POST">
+    <div>
+        <label for="ime">Ime</label>
+        <input type="text" id="ime" name="ime" required />
+    </div>
+
+    <div>
+        <label for="prezime">Prezime</label>
+        <input type="text" id="prezime" name="prezime" required />
+    </div>
+
+    <div>
+        <label for="telefon">Telefon</label>
+        <input type="text" id="telefon" name="telefon" required />
+    </div>
+
+    <div>
+        <label for="datum_zaposljavanja">Datum zaposljavanja</label>
+        <input type="date" id="telefon" name="datum_zaposljavanja" required />
+    </div>
+
+    <div>
+        <label for="jmbg">JMBG</label>
+        <input type="text" id="jmbg" name="jmbg" required />
+    </div>
+
+    <div>
+        <label for="lokacija">Lokacija</label>
+        <input type="text" id="lokacija" name="lokacija" required />
+    </div>
+
+    <div>
+        <p>pravo_pristupa</p><br>
+        <label for="pravo_pristupa">ADMIN</label>
+        <input type="radio" name="pravo_pristupa" value="1" required /><br>
+        <label for="pravo_pristupa">UPOSLENIK</label>
+        <input type="radio" name="pravo_pristupa" value="2" required />
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+    </div>
+    <button type="submit">Registruj osobu</button>
+</form>

@@ -15,6 +15,7 @@ const methodOverride = require('method-override');
 const initializePassport = require('./passport-config');
 const authChecks = require('./authChecks.js');
 const connection = require('./database.js');
+const { ROLE } = require('./roles.js');
 
 initializePassport(
     passport,
@@ -69,6 +70,7 @@ app.use(express.json());
 
 
 app.get('/', authChecks.checkAuthenticated, (req, res) => {
+    console.log("requser" + JSON.stringify(req.user));
     res.render('index.ejs', { email: req.user.email });
 });
 
@@ -96,73 +98,102 @@ app.post('/register', authChecks.checkNotAuthenticated, passport.authenticate('l
     failureRedirect: '/register',
     failureFlash: true
 }));
-/*async (req, res) => {
-   try {
-       const salt = await bcrypt.genSalt();
-       const hashedPassword = await bcrypt.hash(req.body.password, salt);
-       let user = {
-           email: req.body.email,
-       }
-       console.log(hashedPassword);
-       connection.query('INSERT INTO korisnicki_racuni(pravo_pristupa, password, email) VALUES' +
-           `(3, "${hashedPassword}", "${user.email}")`, function (error, results, fields) {
-               if (error) console.log(error);
-           });
-       res.redirect('/login');
-   } catch (e) {
-       console.log(e);
-       res.redirect('/register');
-   }
-})*/
 
-app.get('/users', (req, res) => {
+
+app.get('/users', authChecks.checkAuthenticated, authChecks.authRole(ROLE.ADMIN), (req, res) => {
     getUsers(
         connection,
         data => res.json(data)
     );
 })
 
-app.post('/users', async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        let user = {
-            pravo_pristupa: req.body.pravo_pristupa,
-            email: req.body.email,
-            password: hashedPassword
+app.post('/users',
+    authChecks.checkAuthenticated,
+    authChecks.authRole(ROLE.ADMIN),
+    async (req, res) => {
+        res.render('/addUsers');
+        try {
+            if (req.body.pravo_pristupa < 1 || req.body.pravo_pristupa > 3) {
+                req.flash({ message: 'pogresno pravo pristupa' })
+                res.render('/addUsers');
+            }
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            let user = {
+                lokacija: req.body.lokacija,
+                ime: req.body.ime,
+                prezime: req.body.prezime,
+                telefon: req.body.telefon,
+                datum_zaposljavanja: req.body.datum_zaposljavanja,
+                jmbg: req.body.jmbg,
+                pravo_pristupa: req.body.pravo_pristupa,
+                email: req.body.email,
+                password: hashedPassword
+            }
+            let query = "INSERT INTO osobe(Ime, Prezime, Telefon, datum_zaposljavanja, JMBG, naziv_lokacije)" +
+                "VALUES (?,?,?,?,?,?)";
+            connection.query(
+                query,
+                [
+                    user.ime,
+                    user.prezime,
+                    user.telefon,
+                    user.datum_zaposljavanja,
+                    user.jmbg,
+                    user.lokacija
+                ],
+                function (error, results) {
+                    if (error) {
+                        console.log("jmbg error");
+                        req.flash({ message: 'jmbg vec postoji' });
+                        res.render('/addUsers');
+                        return;
+                    }
+                    user.o_id = results.insertId;
+                    let query = "INSERT INTO  korisnicki_racuni(osoba_id,pravo_pristupa, password, email)" +
+                        "VALUES (?,?,?,?)";
+                    connection.query(
+                        query,
+                        [
+                            user.o_id,
+                            user.pravo_pristupa,
+                            user.password,
+                            user.email
+                        ],
+                        function (error, results) {
+                            if (error) {
+                                console.log("email je vec zauzet");
+                                req.flash({ message: 'email je vec zauzet' })
+                                res.render('/addUsers');
+                                return;
+                            }
+                            /*getUsers(connection, data => {
+                                response.writeHead(200, { 'content-type': 'application/json', 'content-length': Buffer.byteLength(data) });
+                                res.end(data);
+                                res.send();
+                            );
+                            }*/
+                            req.flash({ message: "korisnik dodan" });
+                            res.render('/addUsers');
+                        }
+                    )
+                });
+            res.status(201).send()
+        } catch {
+            res.status(500).send()
         }
-        connection.query('INSERT INTO korisnicki_racuni(pravo_pristupa, password, email) VALUES' +
-            `(${user.pravo_pristupa}, ${user.hashedPassword}, ${user.email})`, function (error, results, fields) {
-                if (error) throw error;
-            });
-        res.status(201).send()
-    } catch {
-        res.status(500).send()
-    }
-})
+    });
 
-app.post('/users/login', async (req, res) => {
-    const user = getUsers(
-        connection,
-        data => data.find(user => user.email === req.body.email)
-    )
-    if (user == null) {
-        return res.status(400).send('Cannot find user')
+app.get('/addUsers',
+    authChecks.checkAuthenticated,
+    authChecks.authRole(ROLE.ADMIN),
+    async (req, res) => {
+        res.render('addUser.ejs');
     }
-    try {
-        if (await bcrypt.compare(req.body.password, user.password)) {
-            res.send('Success')
-        } else {
-            res.send('Not Allowed')
-        }
-    } catch {
-        res.status(500).send()
-    }
-})
+);
 
 async function getUsers(connection, callback) {
     connection.query('SELECT * FROM korisnicki_racuni', function (error, results, fields) {
         if (error) throw error;
-        //console.log('Racuni: ', results);
         callback(results);
     });
 }

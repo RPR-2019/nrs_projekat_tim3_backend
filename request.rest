@@ -2,11 +2,15 @@ GET http://localhost:8000/users
 
 ###
 
-POST http://localhost:8000/users 
+GET http://localhost:8000/users 
 content-Type: application/json
 
 {
-"name": "Kyle", "password": "password"
+    "id":1,
+    "osoba_id":1,
+    "pravo_pristupa":1,
+    "password":"$2b$10$bXtk.6HbvmPfNXA5HMeJXeK//J2MjWcBGbioO6bjw.NWO2WQErflm",
+    "email":"admin@admin.com"
 }
 
 ###
