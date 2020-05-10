@@ -6,6 +6,9 @@ const flash = require('express-flash');
 const connection = require('../database.js');
 const queries = require('../queries.js');
 const { ROLE } = require('../roles.js');
+const bcrypt = require('bcrypt');
+
+
 router.get('/users', (req, res) => {
     queries.getUsers(
         connection,
@@ -22,13 +25,12 @@ router.get('/users/add',
 );
 
 //TODO
-router.post('/users',
+router.post(
+    '/users/add',
     async (req, res) => {
-        res.render('/addUsers');
         try {
             if (req.body.pravo_pristupa < 1 || req.body.pravo_pristupa > 3) {
-                req.flash({ message: 'pogresno pravo pristupa' })
-                res.render('/addUsers');
+                req.body.pravo_pristupa = 3;
             }
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             let user = {
@@ -54,44 +56,41 @@ router.post('/users',
                     user.jmbg,
                     user.lokacija
                 ],
-                function (error, results) {
+                function (error, results, fields) {
                     if (error) {
-                        console.log("jmbg error");
-                        req.flash({ message: 'jmbg vec postoji' });
-                        res.render('/addUsers');
-                        return;
-                    }
-                    user.o_id = results.insertId;
-                    let query = "INSERT INTO  korisnicki_racuni(osoba_id,pravo_pristupa, password, email)" +
-                        "VALUES (?,?,?,?)";
-                    connection.query(
-                        query,
-                        [
-                            user.o_id,
-                            user.pravo_pristupa,
-                            user.password,
-                            user.email
-                        ],
-                        function (error, results) {
-                            if (error) {
-                                console.log("email je vec zauzet");
-                                req.flash({ message: 'email je vec zauzet' })
-                                res.render('/addUsers');
-                                return;
+                        console.log("JMBG error");
+                        req.flash('error', 'JMBG vec postoji');
+                        res.render('addUser.ejs');
+                    } else {
+                        console.log("HEPEK:" + JSON.stringify(results));
+                        user.o_id = results.insertId;
+                        let query = "INSERT INTO  korisnicki_racuni(osoba_id,pravo_pristupa, password, email)" +
+                            "VALUES (?,?,?,?)";
+                        connection.query(
+                            query,
+                            [
+                                user.o_id,
+                                user.pravo_pristupa,
+                                user.password,
+                                user.email
+                            ],
+                            function (error, results) {
+                                if (error) {
+                                    console.log("email je zauzet");
+                                    req.flash('error', 'Email je zauzet');
+                                    res.render('addUser.ejs');
+                                } else {
+                                    req.flash('info', 'Korisnik dodan');
+                                    res.render('addUser.ejs');
+                                }
+
                             }
-                            /*getUsers(connection, data => {
-                                response.writeHead(200, { 'content-type': 'application/json', 'content-length': Buffer.byteLength(data) });
-                                res.end(data);
-                                res.send();
-                            );
-                            }*/
-                            req.flash({ message: "korisnik dodan" });
-                            res.render('/addUsers');
-                        }
-                    )
+                        )
+                    }
                 });
-            res.status(201).send()
-        } catch {
+            //res.status(201).send()
+        } catch (error) {
+            console.log(error);
             res.status(500).send()
         }
     });
