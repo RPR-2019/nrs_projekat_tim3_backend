@@ -44,11 +44,10 @@ initializePassport(
 
 
 
-
-
-app.set('view-engine', 'ejs');
+app.use(expressLayouts);
+app.set('view engine', 'ejs');
+app.set('layout', 'layouts/layout');
 app.set('views', __dirname + '/views')
-app.set('layout', 'layouts/layout')
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(session({
@@ -60,19 +59,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
 app.use(express.json());
-
-//routes
-
-//lijepi fakultet koji te nista ne nauci <3
-
-//app.use('/', authChecks.checkNotAuthenticated, require('./routes/index'));
-//app.use('/login', authChecks.checkNotAuthenticated, require('./routes/login'));
-//app.use('/logout', authChecks.checkNotAuthenticated, require('./routes/login'));
-
-
-/*app.get('/', authChecks.checkAuthenticated, (req, res) => {
-    res.render('index.ejs', { email: req.user.email });
-});*/
+app.use('/static', express.static('./public'));
 
 app.all("/", authChecks.checkAuthenticated, require('./routes/index'));
 

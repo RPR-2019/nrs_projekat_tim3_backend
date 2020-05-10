@@ -1,8 +1,8 @@
 <h1>Login</h1>
 <% if (messages.error) { %>
-<%= messages.error %>
+<div class="alert alert-danger"><%= messages.error %></div>
 <% } %>
-<form action="login" method="POST">
+<form action="login" method="POST" class="mb-2">
     <div>
         <label for="email">Email</label>
         <input type="text" id="email" name="email" required />
@@ -12,6 +12,6 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required />
     </div>
-    <button type="submit">Login</button>
+    <button class="btn btn-primary" type="submit">Login</button>
 </form>
-<a href="/register">Register</a>
+<a href="/register"><button class="btn btn-primary">Register</button></a>
