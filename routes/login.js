@@ -1,25 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const authChecks = require('../authChecks.js');
-const bcrypt = require('bcrypt');
 const passport = require('passport');
 const flash = require('express-flash');
-const session = require('express-session');
 
 
-router.get('/login', (req, res) => {
+router.get('/login', authChecks.checkNotAuthenticated, (req, res) => {
     res.render('login.ejs');
 });
 
-router.post('/login', passport.authenticate('local', {
+router.post('/login', authChecks.checkNotAuthenticated, passport.authenticate('local-login', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
 }));
 
-router.delete('/logout', (req, res) => {
+router.delete('/logout', authChecks.checkAuthenticated, (req, res) => {
     req.logOut();
-    res.redirect('/login')
+    res.redirect('/login');
 });
 
 module.exports = router;
