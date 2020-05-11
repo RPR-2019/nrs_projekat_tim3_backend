@@ -2,7 +2,7 @@ GET http://localhost:8000/users
 
 ###
 
-GET http://localhost:8000/addUsers
+POST http://localhost:8000/login
 content-Type: application/json
 
 {

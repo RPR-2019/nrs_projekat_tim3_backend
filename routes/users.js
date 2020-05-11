@@ -7,7 +7,7 @@ const connection = require('../database.js');
 const queries = require('../queries.js');
 const { ROLE } = require('../roles.js');
 const bcrypt = require('bcrypt');
-
+var htmlEncode = require('js-htmlencode').htmlEncode;
 
 router.get('/users', (req, res) => {
     queries.getUsers(
@@ -23,7 +23,6 @@ router.get('/users/add',
         res.render('addUser.ejs');
     }
 );
-
 //TODO
 router.post(
     '/users/add',
@@ -34,14 +33,14 @@ router.post(
             }
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             let user = {
-                lokacija: req.body.lokacija,
-                ime: req.body.ime,
-                prezime: req.body.prezime,
-                telefon: req.body.telefon,
-                datum_zaposljavanja: req.body.datum_zaposljavanja,
-                jmbg: req.body.jmbg,
-                pravo_pristupa: req.body.pravo_pristupa,
-                email: req.body.email,
+                lokacija: htmlEncode(req.body.lokacija),
+                ime: htmlEncode(req.body.ime),
+                prezime: htmlEncode(req.body.prezime),
+                telefon: htmlEncode(req.body.telefon),
+                datum_zaposljavanja: htmlEncode(req.body.datum_zaposljavanja),
+                jmbg: htmlEncode(req.body.jmbg),
+                pravo_pristupa: htmlEncode(req.body.pravo_pristupa),
+                email: htmlEncode(req.body.email),
                 password: hashedPassword
             }
             let query = "INSERT INTO osobe(Ime, Prezime, Telefon, datum_zaposljavanja, JMBG, naziv_lokacije)" +
@@ -58,11 +57,10 @@ router.post(
                 ],
                 function (error, results, fields) {
                     if (error) {
-                        console.log("JMBG error");
+                        console.log(error);
                         req.flash('error', 'JMBG vec postoji');
                         res.render('addUser.ejs');
                     } else {
-                        console.log("HEPEK:" + JSON.stringify(results));
                         user.o_id = results.insertId;
                         let query = "INSERT INTO  korisnicki_racuni(osoba_id,pravo_pristupa, password, email)" +
                             "VALUES (?,?,?,?)";
@@ -76,7 +74,8 @@ router.post(
                             ],
                             function (error, results) {
                                 if (error) {
-                                    console.log("email je zauzet");
+                                    console.log(error);
+                                    console.log("email je zauzet ili predug");
                                     req.flash('error', 'Email je zauzet');
                                     res.render('addUser.ejs');
                                 } else {

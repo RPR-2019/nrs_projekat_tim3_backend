@@ -10,7 +10,8 @@ const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
-
+const helmet = require('helmet')
+var htmlEncode = require('js-htmlencode').htmlEncode;
 
 const initializePassport = require('./passport-config');
 const authChecks = require('./authChecks.js');
@@ -21,6 +22,7 @@ const queries = require('./queries.js');
 initializePassport(
     passport,
     async function (email, callback) {
+        console.log("email" + email);
         queries.getUsers(
             connection,
             function (data) {
@@ -59,7 +61,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
 app.use(express.json());
-app.use('/static', express.static('./public'));
+app.use(helmet());
+app.use(helmet.xssFilter())
 
 app.all("/", authChecks.checkAuthenticated, require('./routes/index'));
 

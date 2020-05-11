@@ -23,6 +23,8 @@
     "express-ejs-layouts": "^2.5.0",
     "express-flash": "0.0.2",
     "express-session": "^1.17.1",
+    "helmet": "^3.22.0",
+    "js-htmlencode": "^0.3.0",
     "method-override": "^3.0.0",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",

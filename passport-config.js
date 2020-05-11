@@ -1,11 +1,11 @@
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const connection = require('./database.js');
-
+var htmlEncode = require('js-htmlencode').htmlEncode;
 
 function initializePassport(passport, getUserByEmail, getUserById) {
     const authUser = async (email, password, done) => {
-        const user = getUserByEmail(email, async function (user) {
+        const user = getUserByEmail(htmlEncode(email), async function (user) {
             if (user == null) {
                 return done(null, false, { message: 'Email is incorrect' });
             }
@@ -30,8 +30,8 @@ function initializePassport(passport, getUserByEmail, getUserById) {
             console.log("pass:  " + hashedPassword);
             let query = "INSERT INTO korisnicki_racuni(pravo_pristupa, password, email) VALUES (?,?,?)";
             let user = {
-                email: email,
-                password: password
+                email: htmlEncode(email),
+                password: htmlEncode(password)
             }
             connection.query(
                 query,
