@@ -12,6 +12,8 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const helmet = require('helmet')
 var htmlEncode = require('js-htmlencode').htmlEncode;
+const https = require('https');
+const fs = require('fs');
 
 const initializePassport = require('./passport-config');
 const authChecks = require('./authChecks.js');
@@ -44,6 +46,10 @@ initializePassport(
     }
 )
 
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
 
 
 app.use(expressLayouts);
@@ -79,5 +85,6 @@ app.all(
 );
 
 
-app.listen(process.env.PORT || 8000);
+//app.listen(process.env.PORT || 8000);
+https.createServer(options, app).listen(8000);
 console.log("Server started. Listening on port 8000.");
