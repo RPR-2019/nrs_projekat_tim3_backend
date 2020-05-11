@@ -11,15 +11,25 @@ const flash = require('express-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const helmet = require('helmet')
-var htmlEncode = require('js-htmlencode').htmlEncode;
-const https = require('https');
+// const https = require('https');
 const fs = require('fs');
+// const http = require('http');
+let net = require('net');
+let io = require('socket.io');
+let httpx = require('./httpx');
+
 
 const initializePassport = require('./passport-config');
 const authChecks = require('./authChecks.js');
 const connection = require('./database.js');
 const { ROLE } = require('./roles.js');
 const queries = require('./queries.js');
+
+const options = {
+
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
 
 initializePassport(
     passport,
@@ -46,10 +56,6 @@ initializePassport(
     }
 )
 
-const options = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem')
-};
 
 
 app.use(expressLayouts);
@@ -68,7 +74,7 @@ app.use(passport.session());
 app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(helmet());
-app.use(helmet.xssFilter())
+//app.use(helmet.xssFilter())
 
 app.all("/", authChecks.checkAuthenticated, require('./routes/index'));
 
@@ -85,6 +91,28 @@ app.all(
 );
 
 
-//app.listen(process.env.PORT || 8000);
-https.createServer(options, app).listen(8000);
-console.log("Server started. Listening on port 8000.");
+//app.listen(process.env.PORT || 8080);
+
+//https
+//https.createServer(options, app).listen(8080);
+
+/*
+// set up a route to redirect http to https
+http.createServer(
+    function (req, res) {
+        res.redirect('https://' + req.headers.host + req.url);
+
+        // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
+        // res.redirect('https://example.com' + req.url);
+    }
+).listen(8080);
+*/
+
+//http(s) proxy
+
+let server = httpx.createServer(options, app);
+let ws = io(server.http);
+let wss = io(server.https)
+server.listen(process.env.PORT || 8080, '0.0.0.0');
+
+console.log("Server started. Listening on port 8080");
