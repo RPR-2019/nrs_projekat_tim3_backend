@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `skladista`.`korisnicki_racuni` (
   `osoba_id` INT UNSIGNED NULL,
   `pravo_pristupa` INT UNSIGNED NOT NULL,
   `password` VARCHAR(150) NOT NULL,
-  `email` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(150) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `racun_pristup_fk`
     FOREIGN KEY (`pravo_pristupa`)
