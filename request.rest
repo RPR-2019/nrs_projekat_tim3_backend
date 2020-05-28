@@ -1,6 +1,11 @@
-GET http://localhost:8080/users
+GET http://localhost:8080/users/13
 
 ###
+
+DELETE  http://localhost:8080/users/13
+
+###
+
 
 POST http://localhost:8080/login
 content-Type: application/json
@@ -11,6 +16,34 @@ content-Type: application/json
     "pravo_pristupa":1,
     "password":"$2b$10$bXtk.6HbvmPfNXA5HMeJXeK//J2MjWcBGbioO6bjw.NWO2WQErflm",
     "email":"admin@admin.com"
+}
+
+
+###
+
+POST http://localhost:8080/users/add
+content-Type: application/json
+
+{
+    "ime":"bakir",
+    "prezime":"bakir",
+    "telefon":"1231233",
+    "datum_zaposljavanja":"2020-05-11",
+    "jmbg":"123",
+    "email":"a@a.com",
+    "lokacija": "sarajevo",
+    "pravo_pristupa":"2",
+    "password":"bakir"
+}
+
+
+###
+
+PUT http://localhost:8080/users/14
+content-Type: application/json
+
+{
+    "email":"a@a.com"
 }
 
 ###
