@@ -4,7 +4,7 @@ const authChecks = require("../authChecks.js");
 const passport = require("passport");
 const flash = require("express-flash");
 const connection = require("../database.js");
-const queries = require("../queries.js");
+const queries = require("../queries/peopleQueries.js");
 const { ROLE } = require("../roles.js");
 const bcrypt = require("bcrypt");
 var htmlEncode = require("js-htmlencode").htmlEncode;
@@ -14,6 +14,7 @@ router.get("/people", (req, res) => {
 });
 
 router.get(
+  //TODO - add html render
   "/people/add",
   authChecks.checkAuthenticated,
   authChecks.authRole(ROLE.ADMIN),
@@ -30,7 +31,7 @@ router.get(
     queries.getPersonById(connection, req.params.id, (temp, data) => {
       if (data == undefined || data == null) {
         res.writeHead("404");
-        res.write("Not found");
+        res.write(JSON.stringify({ error: "Not found" }));
       } else {
         res.writeHead("200");
         res.write(JSON.stringify(data));
@@ -41,19 +42,20 @@ router.get(
 );
 
 router.delete(
-  "/users/:id",
+  "/people/:id",
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteUserById(
+    queries.deletePersonById(
       connection,
       req.params.id,
       (error, results, fields) => {
         if (error) {
-          res.write(JSON.stringify({ error: "user not found" }));
+          res.writeHead(500);
+          res.write(JSON.stringify({ error: "person not found" }));
         } else {
           res.writeHead(200);
-          res.write(JSON.stringify({ success: "user deleted" }));
+          res.write(JSON.stringify({ success: "person deleted" }));
         }
         res.send();
       }
@@ -62,27 +64,35 @@ router.delete(
 );
 
 router.put(
-  "/users/:id",
+  "/people/:id",
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   async (req, res) => {
-    let user = {};
-    user.id = req.params.id;
-    if (req.body.password) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      user.password = hashedPassword;
+    let person = {};
+    person.id = req.params.id;
+    if (req.body.ime) {
+      person.ime = htmlEncode(req.body.ime);
     }
-    if (req.body.pravo_pristupa) {
-      user.pravo_pristupa = htmlEncode(req.body.pravo_pristupa);
+    if (req.body.prezime) {
+      person.prezime = htmlEncode(req.body.prezime);
     }
-    if (req.body.email) {
-      user.email = htmlEncode(req.body.email);
+    if (req.body.telefon) {
+      person.telefon = htmlEncode(req.body.telefon);
+    }
+    if (req.body.datum_zaposljavanja) {
+      person.datum_zaposljavanja = htmlEncode(req.body.datum_zaposljavanja);
+    }
+    if (req.body.lokacija) {
+      person.naziv_lokacije = htmlEncode(req.body.lokacija);
+    }
+    if (req.body.jmbg) {
+      person.jmbg = htmlEncode(req.body.jmbg);
     }
 
-    queries.updateUserById(connection, user, (temp, data) => {
+    queries.updatePersonById(connection, person, (temp, data) => {
       if (data == undefined || data == null) {
         res.writeHead("404");
-        res.write("Not found");
+        res.write(JSON.stringify({ error: "Not found" }));
       } else {
         res.writeHead("200");
         res.write(JSON.stringify(data));
@@ -92,22 +102,18 @@ router.put(
   }
 );
 
-router.post("/users/add", async (req, res) => {
+router.post("/people/add", async (req, res) => {
   try {
     if (req.body.pravo_pristupa < 1 || req.body.pravo_pristupa > 3) {
       req.body.pravo_pristupa = 3;
     }
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    let user = {
+    let person = {
       lokacija: htmlEncode(req.body.lokacija),
       ime: htmlEncode(req.body.ime),
       prezime: htmlEncode(req.body.prezime),
       telefon: htmlEncode(req.body.telefon),
       datum_zaposljavanja: htmlEncode(req.body.datum_zaposljavanja),
       jmbg: htmlEncode(req.body.jmbg),
-      pravo_pristupa: htmlEncode(req.body.pravo_pristupa),
-      email: htmlEncode(req.body.email),
-      password: hashedPassword,
     };
     let query =
       "INSERT INTO osobe(Ime, Prezime, Telefon, datum_zaposljavanja, JMBG, naziv_lokacije)" +
@@ -115,62 +121,40 @@ router.post("/users/add", async (req, res) => {
     connection.query(
       query,
       [
-        user.ime,
-        user.prezime,
-        user.telefon,
-        user.datum_zaposljavanja,
-        user.jmbg,
-        user.lokacija,
+        person.ime,
+        person.prezime,
+        person.telefon,
+        person.datum_zaposljavanja,
+        person.jmbg,
+        person.lokacija,
       ],
       function (error, resultsOuter, fields) {
         if (error) {
           console.log(error);
           res.writeHead(200);
-          res.write("JMBG is taken");
+          res.write(JSON.stringify({ error: "JMBG is taken" }));
           console.log("JMBG is taken");
           res.send();
           //req.flash("error", "JMBG vec postoji");
           //res.render("addUser.ejs");
         } else {
-          user.o_id = resultsOuter.insertId;
-          let query =
-            "INSERT INTO  korisnicki_racuni(osoba_id,pravo_pristupa, password, email)" +
-            "VALUES (?,?,?,?)";
-          connection.query(
-            query,
-            [user.o_id, user.pravo_pristupa, user.password, user.email],
-            function (error, results, fields) {
-              if (error) {
-                console.log(error);
-                queries.deleteUserById(
-                  connection,
-                  resultsOuter.insertId,
-                  (error, results, fields) => {
-                    if (error) {
-                      res.write(JSON.stringify(error));
-                    }
-                    console.log("email je zauzet ili predug");
-                    res.writeHead(200);
-                    res.write("Email is taken");
-                    res.send();
-                  }
-                );
-                //req.flash("error", "Email je zauzet");
-                //res.render("addUser.ejs");
+          queries.getPersonById(
+            connection,
+            resultsOuter.insertId,
+            (temp, data) => {
+              if (data == undefined || data == null) {
+                res.writeHead("404");
+                res.write(JSON.stringify({ error: "Not found" }));
               } else {
-                queries.getPersonById(connection, results.insertId, (data) => {
-                  res.write(JSON.stringify(data));
-                  res.send();
-                });
-                //req.flash("info", "Korisnik dodan");
-                //res.render("addUser.ejs");
+                res.writeHead("200");
+                res.write(JSON.stringify(data));
               }
+              res.send();
             }
           );
         }
       }
     );
-    //res.status(201).send()
   } catch (error) {
     console.log(error);
     res.status(500).send();
