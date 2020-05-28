@@ -94,6 +94,13 @@ app.all(
   require("./routes/people")
 );
 
+app.all(
+  ["/manufacturers", "/manufacturers*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./routes/manufacturers")
+);
+
 //app.listen(process.env.PORT || 8080);
 
 //https
