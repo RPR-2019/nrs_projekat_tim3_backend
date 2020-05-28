@@ -17,7 +17,7 @@ var queries = (function () {
   }
 
   function deletePersonByIdImpl(connection, id, callback) {
-    queries.getUserById(connection, id, (temp, data) => {
+    getPersonByIdImpl(connection, id, (temp, data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -48,7 +48,7 @@ var queries = (function () {
     }
     if (person.jmbg) {
       query += "JMBG=?,";
-      params.push(person.JMBG);
+      params.push(person.jmbg);
     }
     if (person.naziv_lokacije) {
       query += "naziv_lokacije=?,";
@@ -58,7 +58,7 @@ var queries = (function () {
       query = query.substring(0, query.length - 1);
     }
     params.push(person.id);
-    query += "WHERE id=?";
+    query += " WHERE id=?";
     connection.query(query, params, (error, results, fields) => {
       if (error) {
         console.log(error);
