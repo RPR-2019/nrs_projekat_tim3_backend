@@ -115,6 +115,12 @@ app.all(
   require("./routes/items")
 );
 
+app.all(
+  ["/warehouses", "/warehouses*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./routes/warehouses")
+);
 //app.listen(process.env.PORT || 8080);
 
 //https
