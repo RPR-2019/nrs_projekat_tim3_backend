@@ -101,6 +101,13 @@ app.all(
   require("./routes/manufacturers")
 );
 
+app.all(
+  ["/categories", "/categories*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./routes/categories")
+);
+
 //app.listen(process.env.PORT || 8080);
 
 //https
