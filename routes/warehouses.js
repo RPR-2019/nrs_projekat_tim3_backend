@@ -134,4 +134,11 @@ router.post("/warehouses/add", async (req, res) => {
   }
 });
 
+router.all(
+  ["/warehouses/:id/items", "/warehouses/:id/items*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./warehouseItems")
+);
+
 module.exports = router;
