@@ -108,6 +108,13 @@ app.all(
   require("./routes/categories")
 );
 
+app.all(
+  ["/items", "/items*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./routes/items")
+);
+
 //app.listen(process.env.PORT || 8080);
 
 //https
