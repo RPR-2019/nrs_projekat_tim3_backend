@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getManufacturerById(connection, req.params.id, (temp, data) => {
+    queries.getManufacturerById(connection, req.params.id, (data) => {
       if (data == undefined || data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Manufacturer not found" }));
