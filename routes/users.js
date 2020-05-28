@@ -30,7 +30,7 @@ router.get(
     queries.getUserById(connection, req.params.id, (temp, data) => {
       if (data == undefined || data == null) {
         res.writeHead("404");
-        res.write("Not found");
+        res.write(JSON.stringify({ error: "Not found" }));
       } else {
         res.writeHead("200");
         res.write(JSON.stringify(data));
@@ -82,7 +82,7 @@ router.put(
     queries.updateUserById(connection, user, (temp, data) => {
       if (data == undefined || data == null) {
         res.writeHead("404");
-        res.write("Not found");
+        res.write(JSON.stringify({ error: "Not found" }));
       } else {
         res.writeHead("200");
         res.write(JSON.stringify(data));
@@ -126,7 +126,7 @@ router.post("/users/add", async (req, res) => {
         if (error) {
           console.log(error);
           res.writeHead(200);
-          res.write("JMBG is taken");
+          res.write(JSON.stringify({ error: "JMBG is taken" }));
           console.log("JMBG is taken");
           res.send();
           //req.flash("error", "JMBG vec postoji");
@@ -150,8 +150,8 @@ router.post("/users/add", async (req, res) => {
                       res.write(JSON.stringify(error));
                     }
                     console.log("email je zauzet ili predug");
-                    res.writeHead(200);
-                    res.write("Email is taken");
+                    res.writeHead(500);
+                    res.write(JSON.stringify({ error: "Email is taken" }));
                     res.send();
                   }
                 );
