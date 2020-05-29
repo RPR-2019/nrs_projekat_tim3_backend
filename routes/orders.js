@@ -96,7 +96,6 @@ router.put(
 router.post("/orders", async (req, res) => {
   try {
     let order = {};
-    order.id = req.params.id;
     if (req.body.korisnicki_racun != undefined) {
       if (req.body.korisnicki_racun == null) {
         order.korisnicki_racun = req.body.korisnicki_racun;
