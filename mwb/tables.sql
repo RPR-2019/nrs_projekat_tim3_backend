@@ -280,32 +280,32 @@ CREATE INDEX `pro_kup_fk_idx` ON `skladista`.`proizvodi_kupovine` (`kupovina_id`
 
 
 -- -----------------------------------------------------
--- Table `skladista`.`narudzba`
+-- Table `skladista`.`narudzbe`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `skladista`.`narudzba` ;
+DROP TABLE IF EXISTS `skladista`.`narudzbe` ;
 
-CREATE TABLE IF NOT EXISTS `skladista`.`narudzba` (
+CREATE TABLE IF NOT EXISTS `skladista`.`narudzbe` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `korisnicki_racun` INT UNSIGNED NOT NULL,
   `skladiste_id` INT UNSIGNED NOT NULL,
   `datum_kreiranja` DATE NULL,
   `datum_isporuke` DATE NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `narudzba_racun_fk`
+  CONSTRAINT `narudzbe_racun_fk`
     FOREIGN KEY (`korisnicki_racun`)
     REFERENCES `skladista`.`korisnicki_racuni` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `narudzba_skladiste_fk`
+  CONSTRAINT `narudzbe_skladiste_fk`
     FOREIGN KEY (`skladiste_id`)
     REFERENCES `skladista`.`skladista` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `narudzba_racun_idx` ON `skladista`.`narudzba` (`korisnicki_racun` ASC) ;
+CREATE INDEX `narudzbe_racun_idx` ON `skladista`.`narudzbe` (`korisnicki_racun` ASC) ;
 
-CREATE INDEX `narudzba_skladiste_fk_idx` ON `skladista`.`narudzba` (`skladiste_id` ASC) ;
+CREATE INDEX `narudzbe_skladiste_fk_idx` ON `skladista`.`narudzbe` (`skladiste_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `skladista`.`artikli_narudzbe` (
     ON UPDATE NO ACTION,
   CONSTRAINT `art_nar_fk`
     FOREIGN KEY (`narudzba_id`)
-    REFERENCES `skladista`.`narudzba` (`id`)
+    REFERENCES `skladista`.`narudzbe` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
