@@ -26,23 +26,28 @@ router.get(
 );
 
 router.post(
-  "/warehouses/:id/items",
+  "/warehouses/:id/items/:itemId",
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    let warehoseId = req.params.id;
-    let itemId = req.body.itemId;
+    let warehouseId = req.params.id;
+    let itemId = req.params.itemId;
     let quantity = req.body.quantity;
     queries.addWarehouseItemsById(
       connection,
-      warehoseId,
+      warehouseId,
       itemId,
       quantity,
       function (error, results, fields) {
         if (error) {
-          console.log(error);
           res.writeHead(500);
-          res.write(JSON.stringify({ error: "Item or warehouse not found" }));
+          if (error === 1) {
+            res.write(JSON.stringify({ error: "Item or warehouse not found" }));
+          } else {
+            res.write(
+              JSON.stringify({ error: "Warehouse already has that item" })
+            );
+          }
           res.send();
         } else {
           res.json({ success: "Item added to warehouse." });
@@ -53,24 +58,32 @@ router.post(
 );
 
 router.delete(
-  "/warehouses/:id/items",
+  "/warehouses/:id/items/:itemId",
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    let warehoseId = req.params.id;
-    let itemId = req.body.itemId;
-    queries.deleteWarehouseItemsById(connection, warehoseId, itemId, function (
+    let warehouseId = req.params.id;
+    let itemId = req.params.itemId;
+    queries.deleteWarehouseItemsById(connection, warehouseId, itemId, function (
       error,
       results,
       fields
     ) {
       if (error) {
         res.writeHead(500);
-        res.write(
-          JSON.stringify({
-            error: "Warehouse or item not found",
-          })
-        );
+        if (error === 1) {
+          res.write(
+            JSON.stringify({
+              error: "Warehouse or item not found",
+            })
+          );
+        } else {
+          res.write(
+            JSON.stringify({
+              error: "Warehouse didn't have that item",
+            })
+          );
+        }
       } else {
         res.writeHead(200);
         res.write(JSON.stringify({ success: "Warehouse item deleted" }));
