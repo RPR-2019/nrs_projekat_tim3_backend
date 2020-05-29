@@ -30,33 +30,32 @@ var queries = (function () {
   }
 
   function updateOrderByIdImpl(connection, order, callback) {
-    checkUserAndWarehouse(order, callback, () => {
-      let query = "UPDATE narudzbe SET ";
-      let params = [];
-      if (order.korisnicki_racun) {
-        query += "korisnicki_racun=?,";
-        params.push(order.korisnicki_racun);
-      }
-      if (order.skladiste_id) {
-        query += "skladiste_id=?,";
-        params.push(order.skladiste_id);
-      }
-      if (order.datum_isporuke) {
-        query += "datum_isporuke=?";
-        params.push(order.datum_isporuke);
-      }
-      if (query.slice(-1) == ",") {
-        query = query.substring(0, query.length - 1);
-      }
-      params.push(order.id);
-      query += " WHERE id=?";
-      connection.query(query, params, (error, results, fields) => {
-        if (error) {
-          console.log(error);
-          throw error;
-        }
-        getOrderByIdImpl(connection, order.id, callback);
-      });
+    let query = "UPDATE narudzbe SET ";
+    let params = [];
+    if (order.korisnicki_racun !== undefined) {
+      query += "korisnicki_racun=?,";
+      params.push(order.korisnicki_racun);
+    }
+    if (order.skladiste_id !== undefined) {
+      query += "skladiste_id=?,";
+      params.push(order.skladiste_id);
+    }
+    if (order.datum_isporuke !== undefined) {
+      query += "datum_isporuke=?";
+      params.push(order.datum_isporuke);
+    }
+    if (query.slice(-1) == ",") {
+      query = query.substring(0, query.length - 1);
+    }
+    if (params.length === 0) {
+      return;
+    }
+    params.push(order.id);
+    query += " WHERE id=?";
+    connection.query(query, params, (error, results, fields) => {
+      if (error) {
+        callback(error);
+      } else getOrderByIdImpl(connection, order.id, callback);
     });
   }
 
