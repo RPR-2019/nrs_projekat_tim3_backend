@@ -89,7 +89,7 @@ router.put(
     queries.updateOrderById(connection, order, (error, results) => {
       if (error) {
         res.writeHead("404");
-        res.write(JSON.stringify({ error: error }));
+        res.write(JSON.stringify({ error: "User or warehouse not found" }));
         res.send();
       } else if (results[0] == null) {
         res.writeHead("404");
