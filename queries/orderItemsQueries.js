@@ -41,6 +41,21 @@ var queries = (function () {
       );
     });
   }
+  function deleteAllOrderItemsByIdImpl(orderId, callback) {
+    ordersQ.getOrderById(id, (error, data) => {
+      if (error) {
+        callback(error);
+      } else if (data[0] == null) {
+        callback({ error: "Order not found" });
+      } else {
+        connection.query(
+          "DELETE FROM artikli_narudzbe " + "WHERE narudzba_id=?",
+          [orderId],
+          callback
+        );
+      }
+    });
+  }
 
   function updateOrderItemsByIdImpl(
     orderId,
@@ -110,6 +125,7 @@ var queries = (function () {
     addOrderItems: addOrderItemsImpl,
     deleteOrderItemsById: deleteOrderItemsByIdImpl,
     updateOrderItemsById: updateOrderItemsByIdImpl,
+    deleteAllOrderItemsById: deleteAllOrderItemsByIdImpl,
   };
 })();
 
