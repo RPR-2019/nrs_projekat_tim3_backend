@@ -100,7 +100,7 @@ router.put(
   }
 );
 
-router.post("/people/add", async (req, res) => {
+router.post("/people", async (req, res) => {
   try {
     if (req.body.pravo_pristupa < 1 || req.body.pravo_pristupa > 3) {
       req.body.pravo_pristupa = 3;

@@ -85,7 +85,7 @@ router.put(
   }
 );
 
-router.post("/suppliers/add", async (req, res) => {
+router.post("/suppliers", async (req, res) => {
   try {
     let supplier = {};
     supplier.id = req.params.id;

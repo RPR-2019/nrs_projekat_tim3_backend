@@ -101,7 +101,7 @@ router.put(
   }
 );
 
-router.post("/items/add", async (req, res) => {
+router.post("/items", async (req, res) => {
   try {
     let item = {};
     if (req.body.naziv !== undefined) {

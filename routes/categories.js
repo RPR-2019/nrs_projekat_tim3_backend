@@ -95,7 +95,7 @@ router.put(
   }
 );
 
-router.post("/categories/add", async (req, res) => {
+router.post("/categories", async (req, res) => {
   try {
     let category = {};
     if (req.body.naziv) {
