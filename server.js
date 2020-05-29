@@ -22,7 +22,7 @@ const initializePassport = require("./passport-config");
 const authChecks = require("./authChecks.js");
 const connection = require("./database.js");
 const { ROLE } = require("./roles.js");
-const queries = require("./queries.js");
+const queries = require("./queries/usersQueries.js");
 
 const options = {
   key: fs.readFileSync("key.pem"),

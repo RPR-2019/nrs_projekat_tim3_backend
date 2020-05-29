@@ -3,7 +3,7 @@ const router = express.Router();
 const authChecks = require("../authChecks.js");
 const flash = require("express-flash");
 const connection = require("../database.js");
-const queries = require("../queries.js");
+const queries = require("../queries/usersQueries.js");
 const { ROLE } = require("../roles.js");
 const bcrypt = require("bcrypt");
 var htmlEncode = require("js-htmlencode").htmlEncode;
@@ -91,7 +91,7 @@ router.put(
   }
 );
 
-router.post("/users/add", async (req, res) => {
+router.post("/users", async (req, res) => {
   try {
     if (req.body.pravo_pristupa < 1 || req.body.pravo_pristupa > 3) {
       req.body.pravo_pristupa = 3;
