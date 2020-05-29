@@ -141,4 +141,11 @@ router.post("/orders", async (req, res) => {
   }
 });
 
+router.all(
+  ["/orders/:id/items", "/orders/:id/items*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./orderItems")
+);
+
 module.exports = router;
