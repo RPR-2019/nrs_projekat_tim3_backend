@@ -30,7 +30,11 @@ router.post(
     let orderId = req.params.id;
     let itemId = req.params.itemId;
     let supplierId = req.body.supplierId;
-    let quantity = req.body.quantity;
+    let quantity = htmlEncode(req.body.quantity);
+    if (!quantity || !supplierId || !itemId || !orderId) {
+      res.json({ error: "Invalid params." });
+      return;
+    }
     queries.addOrderItems(orderId, itemId, quantity, supplierId, function (
       error,
       results,
@@ -53,6 +57,10 @@ router.delete(
     let orderId = req.params.id;
     let itemId = req.params.itemId;
     let supplierId = req.body.supplierId;
+    if (!supplierId || !itemId || !orderId) {
+      res.json({ error: "Invalid params." });
+      return;
+    }
     queries.deleteOrderItemsById(orderId, itemId, supplierId, function (
       error,
       results,
@@ -62,6 +70,33 @@ router.delete(
         res.json(error);
       } else {
         res.json({ success: "Order item deleted" });
+      }
+    });
+  }
+);
+
+router.put(
+  "/orders/:id/items/:itemId",
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  (req, res) => {
+    let orderId = req.params.id;
+    let itemId = req.params.itemId;
+    let supplierId = req.body.supplierId;
+    let quantity = htmlEncode(req.body.quantity);
+    if (!quantity || !supplierId || !itemId || !orderId) {
+      res.json({ error: "Invalid params." });
+      return;
+    }
+    queries.addOrderItems(orderId, itemId, quantity, supplierId, function (
+      error,
+      results,
+      fields
+    ) {
+      if (error) {
+        res.json(error);
+      } else {
+        res.json({ success: "Order item updated." });
       }
     });
   }
