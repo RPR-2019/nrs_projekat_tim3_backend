@@ -6,7 +6,7 @@ var queries = (function () {
   function getOrderItemsByIdImpl(id, callback) {
     ordersQ.getOrderById(id, (data) => {
       if (data == null) {
-        callback(1);
+        callback({ error: "Order not found" });
       } else {
         connection.query(
           "SELECT * from artikli_narudzbe WHERE narudzba_id=?",
@@ -59,11 +59,11 @@ var queries = (function () {
   function checkAll(orderId, itemId, supplierId, callback, resolve) {
     ordersQ.getOrderById(orderId, (data) => {
       if (data == null) {
-        callback(1);
+        callback({ error: "Order not found" });
       } else {
         itemQ.getItemById(itemId, (data) => {
           if (data == null) {
-            callback(1);
+            callback({ error: "Item not found" });
           } else {
             supplierItemsQ.getSupplierItemById(
               supplierId,
@@ -72,14 +72,16 @@ var queries = (function () {
                 if (error) {
                   callback(error);
                 } else if (data == null) {
-                  callback(1);
+                  callback({ error: "Supplier not found" });
                 } else {
                   connection.query(
                     "SELECT * FROM proizvodi_skladista WHERE narudzba_id=? AND proizvod_id=?",
                     [orderId, itemId],
                     (error, results) => {
                       if (results[0] == null) {
-                        callback(2);
+                        callback({
+                          error: "Supplier doesn't supply that item",
+                        });
                       } else {
                         resolve();
                       }
@@ -98,6 +100,7 @@ var queries = (function () {
     getOrderItemsById: getOrderItemsByIdImpl,
     addOrderItems: addOrderItemsImpl,
     deleteOrderItemsById: deleteOrderItemsByIdImpl,
+    updateOrderItemsById: updateOrderItemsByIdImpl,
   };
 })();
 
