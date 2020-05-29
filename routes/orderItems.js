@@ -12,13 +12,11 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getOrderItemsById(req.params.id, (data, error) => {
+    queries.getOrderItemsById(req.params.id, (error, results) => {
       if (error) {
-        res.writeHead("404");
-        res.write(JSON.stringify({ error: "Order not found" }));
-        res.send();
+        res.json(error);
       } else {
-        res.json(data);
+        res.json(results);
       }
     });
   }
