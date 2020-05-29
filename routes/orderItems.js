@@ -41,7 +41,13 @@ router.post(
       fields
     ) {
       if (error) {
-        res.json(error);
+        if (error.error) {
+          res.json(error);
+        } else {
+          res.json({
+            error: "Order already has that item from that supplier.",
+          });
+        }
       } else {
         res.json({ success: "Item added to order." });
       }
