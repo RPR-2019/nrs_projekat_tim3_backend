@@ -8,7 +8,7 @@ var queries = (function () {
         callback(null, 1);
       } else {
         connection.query(
-          "SELECT ps.kolicina, ps.proizvod_id, p.naziv as 'naziv_proizvodjaca', p.proizvodjac," +
+          "SELECT ps.kolicina, ps.proizvod_id, p.naziv as 'naziv_proizvoda', p.proizvodjac," +
             " p.kategorija, k.naziv as 'naziv_kategorije', s.naziv as 'naziv_skladista', ps.skladiste_id" +
             " FROM proizvodi_skladista ps" +
             " INNER JOIN proizvodi p ON p.id = ps.proizvod_id " +
@@ -66,10 +66,20 @@ var queries = (function () {
             callback(1);
           } else {
             connection.query(
-              "DELETE FROM proizvodi_skladista " +
-                "WHERE skladiste_id=? and proizvod_id=?",
+              "SELECT * FROM proizvodi_skladista WHERE skladiste_id=? AND proizvod_id=?",
               [warehouseId, itemId],
-              callback
+              (error, results) => {
+                if (results[0] == null) {
+                  callback(2);
+                } else {
+                  connection.query(
+                    "DELETE FROM proizvodi_skladista " +
+                      "WHERE skladiste_id=? and proizvod_id=?",
+                    [warehouseId, itemId],
+                    callback
+                  );
+                }
+              }
             );
           }
         });
