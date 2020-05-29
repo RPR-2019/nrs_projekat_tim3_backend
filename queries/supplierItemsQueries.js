@@ -79,10 +79,32 @@ var queries = (function () {
     });
   }
 
+  function getSupplierItemByIdImpl(supplierId, itemId, callback) {
+    suppliersQ.getSupplierById(supplierId, (data) => {
+      if (data == null) {
+        callback(1);
+      } else {
+        itemQ.getItemById(itemId, (data) => {
+          if (data == null) {
+            callback(1);
+          } else {
+            connection.query(
+              "SELECT * FROM proizvodi_dobavljaca" +
+                " WHERE dobavljac_id=? AND proizvod_id=?",
+              [supplierId, itemId],
+              callback
+            );
+          }
+        });
+      }
+    });
+  }
+
   return {
     getSupplierItemsById: getSupplierItemsByIdImpl,
     addSupplierItemsById: addSupplierItemsByIdImpl,
     deleteSupplierItemsById: deleteSupplierItemsByIdImpl,
+    getSupplierItemById: getSupplierItemByIdImpl,
   };
 })();
 
