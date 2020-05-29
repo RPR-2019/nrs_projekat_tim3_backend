@@ -113,13 +113,17 @@ router.post("/orders", async (req, res) => {
         order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
       }
     }
-    queries.addOrder(connection, order, (temp, data) => {
-      if (data == null) {
+    queries.addOrder(connection, order, (error, results) => {
+      if (error) {
+        res.writeHead("500");
+        res.write(JSON.stringify({ error: error }));
+        res.send();
+      } else if (results == null) {
         res.writeHead("404");
-        res.write(JSON.stringify({ error: "Not found" }));
+        res.write(JSON.stringify({ error: "Order not found" }));
         res.send();
       } else {
-        res.json(data);
+        res.json(results);
       }
     });
   } catch (error) {
