@@ -13,19 +13,15 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getSupplierItemsById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead("404");
-          res.write(JSON.stringify({ error: "Supplier not found" }));
-          res.send();
-        } else {
-          res.json(results);
-        }
+    queries.getSupplierItemsById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead("404");
+        res.write(JSON.stringify({ error: "Supplier not found" }));
+        res.send();
+      } else {
+        res.json(results);
       }
-    );
+    });
   }
 );
 
@@ -36,7 +32,7 @@ router.post(
   (req, res) => {
     let supplierId = req.params.id;
     let itemId = req.params.itemId;
-    queries.addSupplierItemsById(connection, supplierId, itemId, function (
+    queries.addSupplierItemsById(supplierId, itemId, function (
       error,
       results,
       fields
@@ -66,7 +62,7 @@ router.delete(
   (req, res) => {
     let supplierId = req.params.id;
     let itemId = req.params.itemId;
-    queries.deleteSupplierItemsById(connection, supplierId, itemId, function (
+    queries.deleteSupplierItemsById(supplierId, itemId, function (
       error,
       results,
       fields

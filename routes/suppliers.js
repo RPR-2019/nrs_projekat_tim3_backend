@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/suppliers", (req, res) => {
-  queries.getSuppliers(connection, (data) => res.json(data));
+  queries.getSuppliers((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getSupplierById(connection, req.params.id, (data) => {
+    queries.getSupplierById(req.params.id, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Supplier not found" }));
@@ -44,20 +44,16 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteSupplierById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(JSON.stringify({ error: "Supplier not found" }));
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "Supplier deleted" }));
-        }
-        res.send();
+    queries.deleteSupplierById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(JSON.stringify({ error: "Supplier not found" }));
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "Supplier deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -72,7 +68,7 @@ router.put(
       supplier.naziv = htmlEncode(req.body.naziv);
     }
 
-    queries.updateSupplierById(connection, supplier, (data) => {
+    queries.updateSupplierById(supplier, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Supplier not found" }));
@@ -92,7 +88,7 @@ router.post("/suppliers", async (req, res) => {
     if (req.body.naziv) {
       supplier.naziv = htmlEncode(req.body.naziv);
     }
-    queries.addSupplier(connection, supplier, (data) => {
+    queries.addSupplier(supplier, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));

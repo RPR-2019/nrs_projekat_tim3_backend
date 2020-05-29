@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/categories", (req, res) => {
-  queries.getCategories(connection, (data) => res.json(data));
+  queries.getCategories((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getCategoryById(connection, req.params.id, (data) => {
+    queries.getCategoryById(req.params.id, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Category not found" }));
@@ -44,22 +44,18 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteCategoryById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(
-            JSON.stringify({ error: "Category not found or has dependency" })
-          );
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "Category deleted" }));
-        }
-        res.send();
+    queries.deleteCategoryById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(
+          JSON.stringify({ error: "Category not found or has dependency" })
+        );
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "Category deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -79,7 +75,7 @@ router.put(
         : (category.nadkategorija = req.body.nadkategorija);
     }
 
-    queries.updateCategoryById(connection, category, (data, error) => {
+    queries.updateCategoryById(category, (data, error) => {
       if (error) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Parent category not found" }));
@@ -104,18 +100,14 @@ router.post("/categories", async (req, res) => {
     if (req.body.nadkategorija) {
       category.nadkategorija = htmlEncode(req.body.nadkategorija);
     }
-    queries.addCategory(connection, category, function (
-      error,
-      results,
-      fields
-    ) {
+    queries.addCategory(category, function (error, results, fields) {
       if (error) {
         console.log(error);
         res.writeHead(500);
         res.write(JSON.stringify({ error: "error" }));
         res.send();
       } else {
-        queries.getCategoryById(connection, results.insertId, (data) => {
+        queries.getCategoryById(results.insertId, (data) => {
           if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Category not found" }));

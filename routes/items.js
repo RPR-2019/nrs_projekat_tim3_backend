@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/items", (req, res) => {
-  queries.getItems(connection, (data) => res.json(data));
+  queries.getItems((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getItemById(connection, req.params.id, (data) => {
+    queries.getItemById(req.params.id, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Item not found" }));
@@ -44,22 +44,18 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteItemById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(
-            JSON.stringify({ error: "Item not found or has dependency" })
-          );
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "Item deleted" }));
-        }
-        res.send();
+    queries.deleteItemById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(
+          JSON.stringify({ error: "Item not found or has dependency" })
+        );
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "Item deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -83,7 +79,7 @@ router.put(
         ? (item.kategorija = htmlEncode(req.body.kategorija))
         : (item.kategorija = req.body.kategorija);
     }
-    queries.updateItemById(connection, item, (data, error) => {
+    queries.updateItemById(item, (data, error) => {
       if (error) {
         res.writeHead("404");
         res.write(
@@ -117,7 +113,7 @@ router.post("/items", async (req, res) => {
         ? (item.kategorija = htmlEncode(req.body.kategorija))
         : (item.kategorija = req.body.kategorija);
     }
-    queries.addItem(connection, item, function (error, results, fields) {
+    queries.addItem(item, function (error, results, fields) {
       if (error) {
         console.log(error);
         res.writeHead(500);
@@ -126,7 +122,7 @@ router.post("/items", async (req, res) => {
         );
         res.send();
       } else {
-        queries.getItemById(connection, results.insertId, (data) => {
+        queries.getItemById(results.insertId, (data) => {
           if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Item not found" }));

@@ -1,5 +1,7 @@
+const connection = require("../database.js");
+
 var queries = (function () {
-  function getWarehousesImpl(connection, callback) {
+  function getWarehousesImpl(callback) {
     connection.query("SELECT * FROM skladista", function (
       error,
       results,
@@ -10,7 +12,7 @@ var queries = (function () {
     });
   }
 
-  function getWarehouseByIdImpl(connection, id, callback) {
+  function getWarehouseByIdImpl(id, callback) {
     connection.query("SELECT * FROM skladista where id = ?", [id], function (
       error,
       results
@@ -20,8 +22,8 @@ var queries = (function () {
     });
   }
 
-  function deleteWarehouseByIdImpl(connection, id, callback) {
-    getWarehouseByIdImpl(connection, id, (data) => {
+  function deleteWarehouseByIdImpl(id, callback) {
+    getWarehouseByIdImpl(id, (data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -31,7 +33,7 @@ var queries = (function () {
     });
   }
 
-  function updateWarehouseByIdImpl(connection, warehouse, callback) {
+  function updateWarehouseByIdImpl(warehouse, callback) {
     let query = "UPDATE skladista SET ";
     let params = [];
     if (warehouse.naziv !== undefined) {
@@ -52,12 +54,12 @@ var queries = (function () {
       if (error) {
         callback(null, 1);
       } else {
-        getWarehouseByIdImpl(connection, warehouse.id, callback);
+        getWarehouseByIdImpl(warehouse.id, callback);
       }
     });
   }
 
-  function addWarehouseImpl(connection, warehouse, callback) {
+  function addWarehouseImpl(warehouse, callback) {
     let query = "INSERT INTO skladista (naziv, naziv_lokacije) VALUES (?,?)";
     connection.query(
       query,

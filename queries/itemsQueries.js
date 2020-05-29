@@ -1,5 +1,7 @@
+const connection = require("../database.js");
+
 var queries = (function () {
-  function getItemsImpl(connection, callback) {
+  function getItemsImpl(callback) {
     connection.query("SELECT * FROM proizvodi", function (
       error,
       results,
@@ -10,7 +12,7 @@ var queries = (function () {
     });
   }
 
-  function getItemByIdImpl(connection, id, callback) {
+  function getItemByIdImpl(id, callback) {
     connection.query("SELECT * FROM proizvodi where id = ?", [id], function (
       error,
       results
@@ -20,8 +22,8 @@ var queries = (function () {
     });
   }
 
-  function deleteItemByIdImpl(connection, id, callback) {
-    getItemByIdImpl(connection, id, (data) => {
+  function deleteItemByIdImpl(id, callback) {
+    getItemByIdImpl(id, (data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -31,7 +33,7 @@ var queries = (function () {
     });
   }
 
-  function updateItemByIdImpl(connection, item, callback) {
+  function updateItemByIdImpl(item, callback) {
     let query = "UPDATE proizvodi SET ";
     let params = [];
     if (item.naziv !== undefined) {
@@ -56,12 +58,12 @@ var queries = (function () {
       if (error) {
         callback(null, 1);
       } else {
-        getItemByIdImpl(connection, item.id, callback);
+        getItemByIdImpl(item.id, callback);
       }
     });
   }
 
-  function addItemImpl(connection, item, callback) {
+  function addItemImpl(item, callback) {
     let query =
       "INSERT INTO proizvodi (naziv, proizvodjac, kategorija) VALUES (?,?,?)";
     connection.query(

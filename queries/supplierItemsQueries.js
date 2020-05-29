@@ -1,9 +1,10 @@
 const suppliersQ = require("../queries/suppliersQueries.js");
 const itemQ = require("../queries/itemsQueries.js");
+const connection = require("../database.js");
 
 var queries = (function () {
-  function getSupplierItemsByIdImpl(connection, id, callback) {
-    suppliersQ.getSupplierById(connection, id, (data) => {
+  function getSupplierItemsByIdImpl(id, callback) {
+    suppliersQ.getSupplierById(id, (data) => {
       if (data == null) {
         callback(1);
       } else {
@@ -21,12 +22,12 @@ var queries = (function () {
     });
   }
 
-  function addSupplierItemsByIdImpl(connection, supplierId, itemId, callback) {
-    suppliersQ.getSupplierById(connection, supplierId, (data) => {
+  function addSupplierItemsByIdImpl(supplierId, itemId, callback) {
+    suppliersQ.getSupplierById(supplierId, (data) => {
       if (data == null) {
         callback(1);
       } else {
-        itemQ.getItemById(connection, itemId, (data) => {
+        itemQ.getItemById(itemId, (data) => {
           if (data == null) {
             callback(1);
           } else {
@@ -48,11 +49,11 @@ var queries = (function () {
     itemId,
     callback
   ) {
-    suppliersQ.getSupplierById(connection, supplierId, (data) => {
+    suppliersQ.getSupplierById(supplierId, (data) => {
       if (data == null) {
         callback(1);
       } else {
-        itemQ.getItemById(connection, itemId, (data) => {
+        itemQ.getItemById(itemId, (data) => {
           if (data == null) {
             callback(1);
           } else {

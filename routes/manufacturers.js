@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/manufacturers", (req, res) => {
-  queries.getManufacturers(connection, (data) => res.json(data));
+  queries.getManufacturers((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getManufacturerById(connection, req.params.id, (data) => {
+    queries.getManufacturerById(req.params.id, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Manufacturer not found" }));
@@ -44,20 +44,16 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteManufacturerById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(JSON.stringify({ error: "Manufacturer not found" }));
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "Manufacturer deleted" }));
-        }
-        res.send();
+    queries.deleteManufacturerById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(JSON.stringify({ error: "Manufacturer not found" }));
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "Manufacturer deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -72,7 +68,7 @@ router.put(
       manufacturer.naziv = htmlEncode(req.body.naziv);
     }
 
-    queries.updateManufacturerById(connection, manufacturer, (data) => {
+    queries.updateManufacturerById(manufacturer, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Manufacturer not found" }));
@@ -92,7 +88,7 @@ router.post("/manufacturers", async (req, res) => {
     if (req.body.naziv) {
       manufacturer.naziv = htmlEncode(req.body.naziv);
     }
-    queries.addManufacturer(connection, manufacturer, (data) => {
+    queries.addManufacturer(manufacturer, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));

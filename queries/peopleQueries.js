@@ -1,12 +1,14 @@
+const connection = require("../database.js");
+
 var queries = (function () {
-  function getPeopleImpl(connection, callback) {
+  function getPeopleImpl(callback) {
     connection.query("SELECT * FROM osobe", function (error, results, fields) {
       if (error) throw error;
       callback(results);
     });
   }
 
-  function getPersonByIdImpl(connection, id, callback) {
+  function getPersonByIdImpl(id, callback) {
     connection.query("SELECT * FROM osobe where id = ?", [id], function (
       error,
       results
@@ -16,8 +18,8 @@ var queries = (function () {
     });
   }
 
-  function deletePersonByIdImpl(connection, id, callback) {
-    getPersonByIdImpl(connection, id, (temp, data) => {
+  function deletePersonByIdImpl(id, callback) {
+    getPersonByIdImpl(id, (temp, data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -27,7 +29,7 @@ var queries = (function () {
     });
   }
 
-  function updatePersonByIdImpl(connection, person, callback) {
+  function updatePersonByIdImpl(person, callback) {
     let query = "UPDATE osobe SET ";
     let params = [];
     if (person.ime) {
@@ -64,7 +66,7 @@ var queries = (function () {
         console.log(error);
         throw error;
       }
-      getPersonByIdImpl(connection, person.id, callback);
+      getPersonByIdImpl(person.id, callback);
     });
   }
 

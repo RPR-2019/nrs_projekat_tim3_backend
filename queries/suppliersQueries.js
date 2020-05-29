@@ -1,5 +1,7 @@
+const connection = require("../database.js");
+
 var queries = (function () {
-  function getSuppliersImpl(connection, callback) {
+  function getSuppliersImpl(callback) {
     connection.query("SELECT * FROM dobavljaci", function (
       error,
       results,
@@ -10,7 +12,7 @@ var queries = (function () {
     });
   }
 
-  function getSupplierByIdImpl(connection, id, callback) {
+  function getSupplierByIdImpl(id, callback) {
     connection.query("SELECT * FROM dobavljaci where id = ?", [id], function (
       error,
       results
@@ -20,8 +22,8 @@ var queries = (function () {
     });
   }
 
-  function deleteSupplierByIdImpl(connection, id, callback) {
-    getSupplierByIdImpl(connection, id, (data) => {
+  function deleteSupplierByIdImpl(id, callback) {
+    getSupplierByIdImpl(id, (data) => {
       if (data == null) {
         callback(1);
       } else {
@@ -31,7 +33,7 @@ var queries = (function () {
     });
   }
 
-  function updateSupplierByIdImpl(connection, supplier, callback) {
+  function updateSupplierByIdImpl(supplier, callback) {
     let query = "UPDATE dobavljaci SET naziv=? WHERE id=?";
     let params = [];
     params.push(supplier.naziv);
@@ -41,11 +43,11 @@ var queries = (function () {
         console.log(error);
         throw error;
       }
-      getSupplierByIdImpl(connection, supplier.id, callback);
+      getSupplierByIdImpl(supplier.id, callback);
     });
   }
 
-  function addSupplierImpl(connection, supplier, callback) {
+  function addSupplierImpl(supplier, callback) {
     let query = "INSERT INTO dobavljaci(naziv)" + "VALUES (?)";
     connection.query(query, [supplier.naziv], function (
       error,
@@ -58,7 +60,7 @@ var queries = (function () {
         res.write(JSON.stringify({ error: "error" }));
         res.send();
       } else {
-        getSupplierByIdImpl(connection, results.insertId, (data) => {
+        getSupplierByIdImpl(results.insertId, (data) => {
           callback(data);
         });
       }

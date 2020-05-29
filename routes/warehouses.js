@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/warehouses", (req, res) => {
-  queries.getWarehouses(connection, (data) => res.json(data));
+  queries.getWarehouses((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getWarehouseById(connection, req.params.id, (data) => {
+    queries.getWarehouseById(req.params.id, (data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Warehouse not found" }));
@@ -44,22 +44,18 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteWarehouseById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(
-            JSON.stringify({ error: "Warehouse not found or has dependency" })
-          );
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "Warehouse deleted" }));
-        }
-        res.send();
+    queries.deleteWarehouseById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(
+          JSON.stringify({ error: "Warehouse not found or has dependency" })
+        );
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "Warehouse deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -78,7 +74,7 @@ router.put(
         ? (warehouse.naziv_lokacije = htmlEncode(req.body.naziv_lokacije))
         : (warehouse.naziv_lokacije = req.body.naziv_lokacije);
     }
-    queries.updateWarehouseById(connection, warehouse, (data, error) => {
+    queries.updateWarehouseById(warehouse, (data, error) => {
       if (error) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Error" }));
@@ -105,18 +101,14 @@ router.post("/warehouses", async (req, res) => {
         ? (warehouse.naziv_lokacije = htmlEncode(req.body.naziv_lokacije))
         : (warehouse.naziv_lokacije = req.body.naziv_lokacije);
     }
-    queries.addWarehouse(connection, warehouse, function (
-      error,
-      results,
-      fields
-    ) {
+    queries.addWarehouse(warehouse, function (error, results, fields) {
       if (error) {
         console.log(error);
         res.writeHead(500);
         res.write(JSON.stringify({ error: "Error" }));
         res.send();
       } else {
-        queries.getWarehouseById(connection, results.insertId, (data) => {
+        queries.getWarehouseById(results.insertId, (data) => {
           if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Warehouse not found" }));

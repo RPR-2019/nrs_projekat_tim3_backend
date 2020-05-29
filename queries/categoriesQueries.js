@@ -1,5 +1,6 @@
+const connection = require("../database.js");
 var queries = (function () {
-  function getCategoriesImpl(connection, callback) {
+  function getCategoriesImpl(callback) {
     connection.query("SELECT * FROM kategorije", function (
       error,
       results,
@@ -10,7 +11,7 @@ var queries = (function () {
     });
   }
 
-  function getCategoryByIdImpl(connection, id, callback) {
+  function getCategoryByIdImpl(id, callback) {
     connection.query("SELECT * FROM kategorije where id = ?", [id], function (
       error,
       results
@@ -20,8 +21,8 @@ var queries = (function () {
     });
   }
 
-  function deleteCategoryByIdImpl(connection, id, callback) {
-    getCategoryByIdImpl(connection, id, (data) => {
+  function deleteCategoryByIdImpl(id, callback) {
+    getCategoryByIdImpl(id, (data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -31,7 +32,7 @@ var queries = (function () {
     });
   }
 
-  function updateCategoryByIdImpl(connection, category, callback) {
+  function updateCategoryByIdImpl(category, callback) {
     let query = "UPDATE kategorije SET ";
     let params = [];
     if (category.naziv !== undefined) {
@@ -51,12 +52,12 @@ var queries = (function () {
       if (error) {
         callback(null, 1);
       } else {
-        getCategoryByIdImpl(connection, category.id, callback);
+        getCategoryByIdImpl(category.id, callback);
       }
     });
   }
 
-  function addCategoryImpl(connection, category, callback) {
+  function addCategoryImpl(category, callback) {
     let query = "INSERT INTO kategorije (naziv, nadkategorija) VALUES (?,?)";
     connection.query(query, [category.naziv, category.nadkategorija], callback);
   }

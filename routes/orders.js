@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/orders", (req, res) => {
-  queries.getOrders(connection, (data) => res.json(data));
+  queries.getOrders((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getOrderById(connection, req.params.id, (error, results) => {
+    queries.getOrderById(req.params.id, (error, results) => {
       if (error) {
         res.writeHead("500");
         res.write(JSON.stringify({ error: "Server error" }));
@@ -48,19 +48,15 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteOrderById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(JSON.stringify({ error: "Order not found" }));
-          res.send();
-        } else {
-          res.json({ success: "Order deleted" });
-        }
+    queries.deleteOrderById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(JSON.stringify({ error: "Order not found" }));
+        res.send();
+      } else {
+        res.json({ success: "Order deleted" });
       }
-    );
+    });
   }
 );
 
@@ -86,7 +82,7 @@ router.put(
       }
     }
 
-    queries.updateOrderById(connection, order, (error, results) => {
+    queries.updateOrderById(order, (error, results) => {
       if (error) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "User or warehouse not found" }));
@@ -126,7 +122,7 @@ router.post("/orders", async (req, res) => {
         order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
       }
     }
-    queries.addOrder(connection, order, (error, results) => {
+    queries.addOrder(order, (error, results) => {
       if (error) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "User or warehouse not found!" }));

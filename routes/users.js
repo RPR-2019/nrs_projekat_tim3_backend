@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/users", (req, res) => {
-  queries.getUsers(connection, (data) => res.json(data));
+  queries.getUsers((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getUserById(connection, req.params.id, (temp, data) => {
+    queries.getUserById(req.params.id, (temp, data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
@@ -44,19 +44,15 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deleteUserById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.write(JSON.stringify({ error: "user not found" }));
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "user deleted" }));
-        }
-        res.send();
+    queries.deleteUserById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.write(JSON.stringify({ error: "user not found" }));
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "user deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -78,7 +74,7 @@ router.put(
       user.email = htmlEncode(req.body.email);
     }
 
-    queries.updateUserById(connection, user, (temp, data) => {
+    queries.updateUserById(user, (temp, data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
@@ -142,7 +138,6 @@ router.post("/users", async (req, res) => {
               if (error) {
                 console.log(error);
                 queries.deleteUserById(
-                  connection,
                   resultsOuter.insertId,
                   (error, results, fields) => {
                     if (error) {
@@ -157,7 +152,7 @@ router.post("/users", async (req, res) => {
                 //req.flash("error", "Email je zauzet");
                 //res.render("addUser.ejs");
               } else {
-                queries.getPersonById(connection, results.insertId, (data) => {
+                queries.getPersonById(results.insertId, (data) => {
                   res.write(JSON.stringify(data));
                   res.send();
                 });

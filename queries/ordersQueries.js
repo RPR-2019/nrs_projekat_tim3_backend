@@ -3,7 +3,7 @@ const warehousesQ = require("../queries/warehousesQueries.js");
 const connection = require("../database.js");
 
 var queries = (function () {
-  function getOrdersImpl(connection, callback) {
+  function getOrdersImpl(callback) {
     connection.query("SELECT * FROM narudzbe", function (
       error,
       results,
@@ -14,12 +14,12 @@ var queries = (function () {
     });
   }
 
-  function getOrderByIdImpl(connection, id, callback) {
+  function getOrderByIdImpl(id, callback) {
     connection.query("SELECT * FROM narudzbe where id = ?", [id], callback);
   }
 
-  function deleteOrderByIdImpl(connection, id, callback) {
-    getOrderByIdImpl(connection, id, (error, results) => {
+  function deleteOrderByIdImpl(id, callback) {
+    getOrderByIdImpl(id, (error, results) => {
       if (results[0] == null) {
         callback(1);
       } else {
@@ -29,7 +29,7 @@ var queries = (function () {
     });
   }
 
-  function updateOrderByIdImpl(connection, order, callback) {
+  function updateOrderByIdImpl(order, callback) {
     let query = "UPDATE narudzbe SET ";
     let params = [];
     if (order.korisnicki_racun !== undefined) {
@@ -55,11 +55,11 @@ var queries = (function () {
     connection.query(query, params, (error, results, fields) => {
       if (error) {
         callback(error);
-      } else getOrderByIdImpl(connection, order.id, callback);
+      } else getOrderByIdImpl(order.id, callback);
     });
   }
 
-  function addOrderImpl(connection, order, callback) {
+  function addOrderImpl(order, callback) {
     checkUserAndWarehouse(order, callback, () => {
       let query =
         "INSERT INTO narudzbe(korisnicki_racun, skladiste_id, datum_isporuke)" +
@@ -73,7 +73,7 @@ var queries = (function () {
           if (error) {
             callback(error);
           } else {
-            getOrderByIdImpl(connection, results.insertId, callback);
+            getOrderByIdImpl(results.insertId, callback);
           }
         }
       );
@@ -81,7 +81,7 @@ var queries = (function () {
   }
 
   function checkUserAndWarehouse(order, callback, done) {
-    usersQ.getUserById(connection, order.korisnicki_racun, (error, data) => {
+    usersQ.getUserById(order.korisnicki_racun, (error, data) => {
       if (data == null) {
         callback(1);
       } else {

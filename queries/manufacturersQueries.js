@@ -1,5 +1,7 @@
+const connection = require("../database.js");
+
 var queries = (function () {
-  function getManufacturersImpl(connection, callback) {
+  function getManufacturersImpl(callback) {
     connection.query("SELECT * FROM proizvodjaci", function (
       error,
       results,
@@ -10,7 +12,7 @@ var queries = (function () {
     });
   }
 
-  function getManufacturerByIdImpl(connection, id, callback) {
+  function getManufacturerByIdImpl(id, callback) {
     connection.query("SELECT * FROM proizvodjaci where id = ?", [id], function (
       error,
       results
@@ -20,8 +22,8 @@ var queries = (function () {
     });
   }
 
-  function deleteManufacturerByIdImpl(connection, id, callback) {
-    getManufacturerByIdImpl(connection, id, (data) => {
+  function deleteManufacturerByIdImpl(id, callback) {
+    getManufacturerByIdImpl(id, (data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -31,7 +33,7 @@ var queries = (function () {
     });
   }
 
-  function updateManufacturerByIdImpl(connection, manufacturer, callback) {
+  function updateManufacturerByIdImpl(manufacturer, callback) {
     let query = "UPDATE proizvodjaci SET naziv=? WHERE id=?";
     let params = [];
     params.push(manufacturer.naziv);
@@ -41,11 +43,11 @@ var queries = (function () {
         console.log(error);
         throw error;
       }
-      getManufacturerByIdImpl(connection, manufacturer.id, callback);
+      getManufacturerByIdImpl(manufacturer.id, callback);
     });
   }
 
-  function addManufacturerImpl(connection, manufacturer, callback) {
+  function addManufacturerImpl(manufacturer, callback) {
     let query = "INSERT INTO proizvodjaci(naziv)" + "VALUES (?)";
     connection.query(query, [manufacturer.naziv], function (
       error,
@@ -58,7 +60,7 @@ var queries = (function () {
         res.write(JSON.stringify({ error: "error" }));
         res.send();
       } else {
-        getManufacturerByIdImpl(connection, results.insertId, (data) => {
+        getManufacturerByIdImpl(results.insertId, (data) => {
           callback(data);
         });
       }

@@ -8,7 +8,7 @@ const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
 router.get("/people", (req, res) => {
-  queries.getPeople(connection, (data) => res.json(data));
+  queries.getPeople((data) => res.json(data));
 });
 
 router.get(
@@ -26,7 +26,7 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getPersonById(connection, req.params.id, (temp, data) => {
+    queries.getPersonById(req.params.id, (temp, data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
@@ -44,20 +44,16 @@ router.delete(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.deletePersonById(
-      connection,
-      req.params.id,
-      (error, results, fields) => {
-        if (error) {
-          res.writeHead(500);
-          res.write(JSON.stringify({ error: "person not found" }));
-        } else {
-          res.writeHead(200);
-          res.write(JSON.stringify({ success: "person deleted" }));
-        }
-        res.send();
+    queries.deletePersonById(req.params.id, (error, results, fields) => {
+      if (error) {
+        res.writeHead(500);
+        res.write(JSON.stringify({ error: "person not found" }));
+      } else {
+        res.writeHead(200);
+        res.write(JSON.stringify({ success: "person deleted" }));
       }
-    );
+      res.send();
+    });
   }
 );
 
@@ -87,7 +83,7 @@ router.put(
       person.jmbg = htmlEncode(req.body.jmbg);
     }
 
-    queries.updatePersonById(connection, person, (temp, data) => {
+    queries.updatePersonById(person, (temp, data) => {
       if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));

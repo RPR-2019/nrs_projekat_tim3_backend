@@ -1,5 +1,7 @@
+const connection = require("../database.js");
+
 var queries = (function () {
-  async function getUsersImpl(connection, callback) {
+  async function getUsersImpl(callback) {
     connection.query("SELECT * FROM korisnicki_racuni", function (
       error,
       results,
@@ -10,7 +12,7 @@ var queries = (function () {
     });
   }
 
-  function getUserByIdImpl(connection, id, callback) {
+  function getUserByIdImpl(id, callback) {
     connection.query(
       "SELECT * FROM korisnicki_racuni where id = ?",
       [id],
@@ -21,7 +23,7 @@ var queries = (function () {
     );
   }
 
-  function getPersonByIdImpl(connection, id, callback) {
+  function getPersonByIdImpl(id, callback) {
     connection.query(
       "SELECT k.pravo_pristupa, k.email, o.ime, o.prezime, o.telefon, o.datum_zaposljavanja, o.JMBG, o.naziv_lokacije FROM korisnicki_racuni k RIGHT JOIN osobe o ON (o.id= k.osoba_id) where k.id = ?",
       [id],
@@ -32,8 +34,8 @@ var queries = (function () {
     );
   }
 
-  function deleteUserByIdImpl(connection, id, callback) {
-    queries.getUserById(connection, id, (temp, data) => {
+  function deleteUserByIdImpl(id, callback) {
+    queries.getUserById(id, (temp, data) => {
       if (data === undefined || data === null) {
         callback(1);
       } else {
@@ -43,13 +45,13 @@ var queries = (function () {
     });
   }
 
-  function updatePersonByIdImpl(connection, params, callback) {
+  function updatePersonByIdImpl(params, callback) {
     let query =
       "UPDATE osobe SET ime=?, prezime=?, telefon=?, datum_zaposljavanja=?, JMBG=?, naziv_lokacije=? WHERE id=?";
     connection.query(query, params, callback);
   }
 
-  function updateUserByIdImpl(connection, user, callback) {
+  function updateUserByIdImpl(user, callback) {
     let query = "UPDATE korisnicki_racuni SET ";
     let params = [];
     if (user.password) {
@@ -74,7 +76,7 @@ var queries = (function () {
         console.log(error);
         throw error;
       }
-      getUserByIdImpl(connection, user.id, callback);
+      getUserByIdImpl(user.id, callback);
     });
   }
 
