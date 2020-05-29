@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `skladista`.`narudzbe` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `korisnicki_racun` INT UNSIGNED NOT NULL,
   `skladiste_id` INT UNSIGNED NOT NULL,
-  `datum_kreiranja` DATE NULL,
+  `datum_kreiranja` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `datum_isporuke` DATE NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `narudzbe_racun_fk`
