@@ -1,5 +1,6 @@
 const ordersQ = require("../queries/ordersQueries.js");
 const supplierItemsQ = require("../queries/supplierItemsQueries.js");
+const itemQ = require("../queries/itemsQueries.js");
 const connection = require("../database.js");
 
 var queries = (function () {
@@ -22,7 +23,7 @@ var queries = (function () {
   function addOrderItemsImpl(orderId, itemId, quantity, supplierId, callback) {
     checkAll(orderId, itemId, supplierId, callback, () => {
       connection.query(
-        "INSERT INTO proizvodi_skladista(proizvod_id, kolicina, dobavljac_id, narudzba_id)" +
+        "INSERT INTO artikli_narudzbe(proizvod_id, kolicina, dobavljac_id, narudzba_id)" +
           " VALUES(?,?,?,?)",
         [itemId, quantity, supplierId, orderId],
         callback
@@ -33,7 +34,7 @@ var queries = (function () {
   function deleteOrderItemsByIdImpl(orderId, itemId, supplierId, callback) {
     checkAll(orderId, itemId, supplierId, callback, () => {
       connection.query(
-        "DELETE FROM proizvodi_skladista " +
+        "DELETE FROM artikli_narudzbe " +
           "WHERE narudzba_id=? and proizvod_id=?",
         [orderId, itemId],
         callback
@@ -50,7 +51,7 @@ var queries = (function () {
   ) {
     checkAll(orderId, itemId, supplierId, callback, () => {
       connection.query(
-        "UPDATE proizvodi_skladista SET kolicina=?" +
+        "UPDATE artikli_narudzbe SET kolicina=?" +
           "WHERE narudzba_id=? AND proizvod_id=? AND dobavljac_id=?",
         [quantity, orderId, itemId, supplierId],
         callback
@@ -59,8 +60,11 @@ var queries = (function () {
   }
 
   function checkAll(orderId, itemId, supplierId, callback, resolve) {
-    ordersQ.getOrderById(orderId, (data) => {
-      if (data == null) {
+    ordersQ.getOrderById(orderId, (error, data) => {
+      if (error) {
+        callback(error);
+        return;
+      } else if (data[0] == null) {
         callback({ error: "Order not found" });
       } else {
         itemQ.getItemById(itemId, (data) => {
@@ -77,10 +81,13 @@ var queries = (function () {
                   callback({ error: "Supplier not found" });
                 } else {
                   connection.query(
-                    "SELECT * FROM proizvodi_skladista WHERE narudzba_id=? AND proizvod_id=?",
-                    [orderId, itemId],
+                    "SELECT * FROM proizvodi_dobavljaca WHERE dobavljac_id=? AND proizvod_id=?",
+                    [supplierId, itemId],
                     (error, results) => {
-                      if (results[0] == null) {
+                      if (error) {
+                        callback(error);
+                        return;
+                      } else if (results[0] == null) {
                         callback({
                           error: "Supplier doesn't supply that item",
                         });
