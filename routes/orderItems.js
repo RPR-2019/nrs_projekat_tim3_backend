@@ -30,11 +30,12 @@ router.post(
     let orderId = req.params.id;
     let itemId = req.params.itemId;
     let supplierId = req.body.supplierId;
-    let quantity = htmlEncode(req.body.quantity);
+    let quantity = req.body.quantity;
     if (!quantity || !supplierId || !itemId || !orderId) {
       res.json({ error: "Invalid params." });
       return;
     }
+    quantity = htmlEncode(quantity);
     queries.addOrderItems(orderId, itemId, quantity, supplierId, function (
       error,
       results,
@@ -81,6 +82,26 @@ router.delete(
   }
 );
 
+router.delete(
+  "/orders/:id/items",
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  (req, res) => {
+    let orderId = req.params.id;
+    if (!orderId) {
+      res.json({ error: "Invalid params." });
+      return;
+    }
+    queries.deleteAllOrderItemsById(orderId, function (error, results, fields) {
+      if (error) {
+        res.json(error);
+      } else {
+        res.json({ success: "Order items deleted" });
+      }
+    });
+  }
+);
+
 router.put(
   "/orders/:id/items/:itemId",
   //authChecks.checkAuthenticated,
@@ -89,22 +110,25 @@ router.put(
     let orderId = req.params.id;
     let itemId = req.params.itemId;
     let supplierId = req.body.supplierId;
-    let quantity = htmlEncode(req.body.quantity);
+    let quantity = req.body.quantity;
     if (!quantity || !supplierId || !itemId || !orderId) {
       res.json({ error: "Invalid params." });
       return;
     }
-    queries.addOrderItems(orderId, itemId, quantity, supplierId, function (
-      error,
-      results,
-      fields
-    ) {
-      if (error) {
-        res.json(error);
-      } else {
-        res.json({ success: "Order item updated." });
+    quantity = htmlEncode(quantity);
+    queries.updateOrderItemsById(
+      orderId,
+      itemId,
+      quantity,
+      supplierId,
+      function (error, results, fields) {
+        if (error) {
+          res.json(error);
+        } else {
+          res.json({ success: "Order item updated." });
+        }
       }
-    });
+    );
   }
 );
 
