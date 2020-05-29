@@ -77,14 +77,9 @@ var queries = (function () {
       [order.korisnicki_racun, order.skladiste_id, order.datum_isporuke],
       function (error, results, fields) {
         if (error) {
-          console.log(error);
-          res.writeHead(500);
-          res.write(JSON.stringify({ error: "error" }));
-          res.send();
+          callback(error);
         } else {
-          getOrderByIdImpl(connection, results.insertId, (data) => {
-            callback(data);
-          });
+          getOrderByIdImpl(connection, results.insertId, callback);
         }
       }
     );
