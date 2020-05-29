@@ -121,6 +121,13 @@ app.all(
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/warehouses")
 );
+
+app.all(
+  ["/suppliers", "/suppliers*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./routes/suppliers")
+);
 //app.listen(process.env.PORT || 8080);
 
 //https
