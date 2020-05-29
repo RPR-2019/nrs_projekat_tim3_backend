@@ -4,8 +4,10 @@ const connection = require("../database.js");
 
 var queries = (function () {
   function getOrderItemsByIdImpl(id, callback) {
-    ordersQ.getOrderById(id, (data) => {
-      if (data == null) {
+    ordersQ.getOrderById(id, (error, data) => {
+      if (error) {
+        callback(error);
+      } else if (data[0] == null) {
         callback({ error: "Order not found" });
       } else {
         connection.query(
