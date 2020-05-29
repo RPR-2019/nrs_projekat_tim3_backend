@@ -42,7 +42,7 @@ var queries = (function () {
     });
   }
   function deleteAllOrderItemsByIdImpl(orderId, callback) {
-    ordersQ.getOrderById(id, (error, data) => {
+    ordersQ.getOrderById(orderId, (error, data) => {
       if (error) {
         callback(error);
       } else if (data[0] == null) {
