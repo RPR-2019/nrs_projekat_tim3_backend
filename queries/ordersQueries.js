@@ -1,3 +1,6 @@
+const usersQ = require("../queries/usersQueries.js");
+const warehousesQ = require("../queries/warehousesQueries.js");
+
 var queries = (function () {
   function getOrdersImpl(connection, callback) {
     connection.query("SELECT * FROM narudzbe", function (
@@ -11,18 +14,12 @@ var queries = (function () {
   }
 
   function getOrderByIdImpl(connection, id, callback) {
-    connection.query("SELECT * FROM narudzbe where id = ?", [id], function (
-      error,
-      results
-    ) {
-      if (error) throw error;
-      callback(null, results[0]);
-    });
+    connection.query("SELECT * FROM narudzbe where id = ?", [id], callback);
   }
 
   function deleteOrderByIdImpl(connection, id, callback) {
-    getOrderByIdImpl(connection, id, (temp, data) => {
-      if (data === undefined || data === null) {
+    getOrderByIdImpl(connection, id, (error, results) => {
+      if (results[0] == null) {
         callback(1);
       } else {
         let query = "DELETE FROM narudzbe WHERE id=" + id;
@@ -65,24 +62,38 @@ var queries = (function () {
   }
 
   function addOrderImpl(connection, order, callback) {
-    /*if (order.datum_kreiranja) {
-      query += "datum_kreiranja=?,";
-      params.push(order.datum_kreiranja);
-    }*/
-    let query =
-      "INSERT INTO narudzbe(korisnicki_racun, skladiste_id, datum_isporuke)" +
-      "VALUES (?,?,?)";
-    connection.query(
-      query,
-      [order.korisnicki_racun, order.skladiste_id, order.datum_isporuke],
-      function (error, results, fields) {
-        if (error) {
-          callback(error);
-        } else {
-          getOrderByIdImpl(connection, results.insertId, callback);
-        }
+    usersQ.getUserById(connection, order.korisnicki_racun, (data) => {
+      if (data == null) {
+        callback(1);
+      } else {
+        warehousesQ.getWarehouseById(connection, order, (data) => {
+          if (data == null) {
+            callback(1);
+          } else {
+            let query =
+              "INSERT INTO narudzbe(korisnicki_racun, skladiste_id, datum_isporuke)" +
+              "VALUES (?,?,?)";
+            console.log(order.datum_isporuke);
+
+            connection.query(
+              query,
+              [
+                order.korisnicki_racun,
+                order.skladiste_id,
+                order.datum_isporuke,
+              ],
+              function (error, results, fields) {
+                if (error) {
+                  callback(error);
+                } else {
+                  getOrderByIdImpl(connection, results.insertId, callback);
+                }
+              }
+            );
+          }
+        });
       }
-    );
+    });
   }
 
   return {
