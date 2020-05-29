@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getManufacturerById(connection, req.params.id, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Manufacturer not found" }));
       } else {
@@ -73,7 +73,7 @@ router.put(
     }
 
     queries.updateManufacturerById(connection, manufacturer, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Manufacturer not found" }));
       } else {
@@ -93,7 +93,7 @@ router.post("/manufacturers", async (req, res) => {
       manufacturer.naziv = htmlEncode(req.body.naziv);
     }
     queries.addManufacturer(connection, manufacturer, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
       } else {

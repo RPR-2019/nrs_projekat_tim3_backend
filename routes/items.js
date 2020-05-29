@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getItemById(connection, req.params.id, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Item not found" }));
       } else {
@@ -127,7 +127,7 @@ router.post("/items", async (req, res) => {
         res.send();
       } else {
         queries.getItemById(connection, results.insertId, (data) => {
-          if (data == undefined || data == null) {
+          if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Item not found" }));
           } else {

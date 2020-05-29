@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getWarehouseById(connection, req.params.id, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Warehouse not found" }));
       } else {
@@ -82,7 +82,7 @@ router.put(
       if (error) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Error" }));
-      } else if (data == undefined || data == null) {
+      } else if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Warehouse not found" }));
       } else {
@@ -117,7 +117,7 @@ router.post("/warehouses", async (req, res) => {
         res.send();
       } else {
         queries.getWarehouseById(connection, results.insertId, (data) => {
-          if (data == undefined || data == null) {
+          if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Warehouse not found" }));
           } else {

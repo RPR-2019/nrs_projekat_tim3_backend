@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getCategoryById(connection, req.params.id, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Category not found" }));
       } else {
@@ -83,7 +83,7 @@ router.put(
       if (error) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Parent category not found" }));
-      } else if (data == undefined || data == null) {
+      } else if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Category not found" }));
       } else {
@@ -116,7 +116,7 @@ router.post("/categories", async (req, res) => {
         res.send();
       } else {
         queries.getCategoryById(connection, results.insertId, (data) => {
-          if (data == undefined || data == null) {
+          if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Category not found" }));
           } else {

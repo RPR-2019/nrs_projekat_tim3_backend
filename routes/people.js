@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getPersonById(connection, req.params.id, (temp, data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
       } else {
@@ -88,7 +88,7 @@ router.put(
     }
 
     queries.updatePersonById(connection, person, (temp, data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
       } else {
@@ -140,7 +140,7 @@ router.post("/people", async (req, res) => {
             connection,
             resultsOuter.insertId,
             (temp, data) => {
-              if (data == undefined || data == null) {
+              if (data == null) {
                 res.writeHead("404");
                 res.write(JSON.stringify({ error: "Not found" }));
               } else {

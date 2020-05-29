@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getSupplierById(connection, req.params.id, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Supplier not found" }));
       } else {
@@ -73,7 +73,7 @@ router.put(
     }
 
     queries.updateSupplierById(connection, supplier, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Supplier not found" }));
       } else {
@@ -93,7 +93,7 @@ router.post("/suppliers", async (req, res) => {
       supplier.naziv = htmlEncode(req.body.naziv);
     }
     queries.addSupplier(connection, supplier, (data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
       } else {

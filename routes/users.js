@@ -27,7 +27,7 @@ router.get(
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.getUserById(connection, req.params.id, (temp, data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
       } else {
@@ -79,7 +79,7 @@ router.put(
     }
 
     queries.updateUserById(connection, user, (temp, data) => {
-      if (data == undefined || data == null) {
+      if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Not found" }));
       } else {
