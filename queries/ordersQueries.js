@@ -1,6 +1,6 @@
 var queries = (function () {
   function getOrdersImpl(connection, callback) {
-    connection.query("SELECT * FROM narudzba", function (
+    connection.query("SELECT * FROM narudzbe", function (
       error,
       results,
       fields
@@ -11,7 +11,7 @@ var queries = (function () {
   }
 
   function getOrderByIdImpl(connection, id, callback) {
-    connection.query("SELECT * FROM narudzba where id = ?", [id], function (
+    connection.query("SELECT * FROM narudzbe where id = ?", [id], function (
       error,
       results
     ) {
@@ -25,14 +25,14 @@ var queries = (function () {
       if (data === undefined || data === null) {
         callback(1);
       } else {
-        let query = "DELETE FROM narudzba WHERE id=" + id;
+        let query = "DELETE FROM narudzbe WHERE id=" + id;
         connection.query(query, callback);
       }
     });
   }
 
   function updateOrderByIdImpl(connection, order, callback) {
-    let query = "UPDATE narudzba SET ";
+    let query = "UPDATE narudzbe SET ";
     let params = [];
     if (order.korisnicki_racun) {
       query += "korisnicki_racun=?,";
