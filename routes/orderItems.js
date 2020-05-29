@@ -29,20 +29,15 @@ router.post(
   (req, res) => {
     let orderId = req.params.id;
     let itemId = req.params.itemId;
+    let supplierId = req.body.supplierId;
     let quantity = req.body.quantity;
-    queries.addOrderItems(orderId, itemId, quantity, function (
+    queries.addOrderItems(orderId, itemId, quantity, supplierId, function (
       error,
       results,
       fields
     ) {
       if (error) {
-        res.writeHead(500);
-        if (error === 1) {
-          res.write(JSON.stringify({ error: "Item or order not found" }));
-        } else {
-          res.write(JSON.stringify({ error: "Order already has that item" }));
-        }
-        res.send();
+        res.json(error);
       } else {
         res.json({ success: "Item added to order." });
       }
@@ -57,31 +52,17 @@ router.delete(
   (req, res) => {
     let orderId = req.params.id;
     let itemId = req.params.itemId;
-    queries.deleteOrderItemsById(orderId, itemId, function (
+    let supplierId = req.body.supplierId;
+    queries.deleteOrderItemsById(orderId, itemId, supplierId, function (
       error,
       results,
       fields
     ) {
       if (error) {
-        res.writeHead(500);
-        if (error === 1) {
-          res.write(
-            JSON.stringify({
-              error: "Order or item not found",
-            })
-          );
-        } else {
-          res.write(
-            JSON.stringify({
-              error: "Order didn't have that item",
-            })
-          );
-        }
+        res.json(error);
       } else {
-        res.writeHead(200);
-        res.write(JSON.stringify({ success: "Order item deleted" }));
+        res.json({ success: "Order item deleted" });
       }
-      res.send();
     });
   }
 );
