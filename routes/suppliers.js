@@ -108,4 +108,11 @@ router.post("/suppliers/add", async (req, res) => {
   }
 });
 
+router.all(
+  ["/suppliers/:id/items", "/suppliers/:id/items*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./supplierItems")
+);
+
 module.exports = router;
