@@ -70,24 +70,33 @@ router.put(
   //authChecks.authRole(ROLE.ADMIN),
   async (req, res) => {
     let order = {};
+
     order.id = req.params.id;
-    if (req.body.korisnicki_racun) {
+    if (req.body.korisnicki_racun !== undefined) {
       order.korisnicki_racun = htmlEncode(req.body.korisnicki_racun);
     }
-    if (req.body.skladiste_id) {
+    if (req.body.skladiste_id !== undefined) {
       order.skladiste_id = htmlEncode(req.body.skladiste_id);
     }
-    if (req.body.datum_isporuke) {
-      order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
+    if (req.body.datum_isporuke !== undefined) {
+      if (req.body.datum_isporuke !== null) {
+        order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
+      } else {
+        order.datum_isporuke = req.body.datum_isporuke;
+      }
     }
 
-    queries.updateOrderById(connection, order, (temp, data) => {
-      if (data == undefined || data == null) {
+    queries.updateOrderById(connection, order, (error, results) => {
+      if (error) {
         res.writeHead("404");
-        res.write(JSON.stringify({ error: "Not found" }));
+        res.write(JSON.stringify({ error: error }));
+        res.send();
+      } else if (results[0] == null) {
+        res.writeHead("404");
+        res.write(JSON.stringify({ error: "Order not found" }));
         res.send();
       } else {
-        res.json(data);
+        res.json(results[0]);
       }
     });
   }
