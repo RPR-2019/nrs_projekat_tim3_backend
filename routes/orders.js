@@ -26,13 +26,18 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getOrderById(connection, req.params.id, (temp, data) => {
-      if (data == null) {
+    queries.getOrderById(connection, req.params.id, (error, results) => {
+      if (error) {
+        res.writeHead("500");
+        res.write(JSON.stringify({ error: "Server error" }));
+        res.send();
+      } else if (results[0] == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Order not found" }));
         res.send();
       } else {
-        res.json(data);
+        console.log(JSON.stringify(results));
+        res.json(results[0]);
       }
     });
   }
@@ -115,8 +120,8 @@ router.post("/orders", async (req, res) => {
     }
     queries.addOrder(connection, order, (error, results) => {
       if (error) {
-        res.writeHead("500");
-        res.write(JSON.stringify({ error: error }));
+        res.writeHead("404");
+        res.write(JSON.stringify({ error: "User or warehouse not found!" }));
         res.send();
       } else if (results == null) {
         res.writeHead("404");
