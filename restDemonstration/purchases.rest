@@ -1,0 +1,38 @@
+###
+//get all purchases
+GET http://localhost:8080/purchases
+
+###
+//get purchase with id
+GET http://localhost:8080/purchases/16/items
+
+###
+//delete purchase with id
+DELETE http://localhost:8080/purchases/16
+###
+//all parameters in body are required and must exist
+//stanje_id(condition) values are static and aredefiend in db (id 1-7)
+POST http://localhost:8080/purchases
+content-Type: application/json
+
+{
+    "korisnicki_racun" : "1",
+    "stanje_id": "2",
+    "purchaseItems": [
+        {
+            "quantity": "7",
+            "itemId": "6"
+        }
+    ]
+}
+###
+//quantity is required and item must already be in purchase
+PUT http://localhost:8080/purchases/16/items/6
+
+content-Type: application/json
+
+{
+    "quantity": "15"
+}
+
+###
