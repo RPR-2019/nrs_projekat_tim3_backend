@@ -20,13 +20,17 @@ var queries = (function () {
   }
 
   function addPurchaseItemsImpl(purchaseId, itemId, quantity, callback) {
-    checkAll(purchaseId, itemId, callback, () => {
-      connection.query(
-        "INSERT INTO proizvodi_kupovine(proizvod_id, kolicina, kupovina_id)" +
-          " VALUES(?,?,?)",
-        [itemId, quantity, purchaseId],
-        callback
-      );
+    checkAll(purchaseId, itemId, callback, (itemExists) => {
+      if (!itemExists) {
+        connection.query(
+          "INSERT INTO proizvodi_kupovine(proizvod_id, kolicina, kupovina_id)" +
+            " VALUES(?,?,?)",
+          [itemId, quantity, purchaseId],
+          callback
+        );
+      } else {
+        callback({ error: "Purchase already has that item" });
+      }
     });
   }
 
