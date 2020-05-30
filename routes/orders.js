@@ -71,7 +71,7 @@ router.put(
     order.id = req.params.id;
     var body = req.body;
     if (
-      undefinedCheck(
+      undefinedAndCheck(
         body.korisnicki_racun,
         body.skladiste_id,
         body.datum_isporuke
@@ -116,7 +116,7 @@ router.post("/orders", async (req, res) => {
     //params check
     var body = req.body;
     if (
-      undefinedCheck(
+      undefinedOrCheck(
         body.korisnicki_racun,
         body.skladiste_id,
         body.datum_isporuke
@@ -184,10 +184,19 @@ router.post("/orders", async (req, res) => {
   }
 });
 
-function undefinedCheck(...params) {
+function undefinedOrCheck(...params) {
   for (param of params) {
     if (param === undefined) {
       return true;
+    }
+  }
+  return false;
+}
+
+function undefinedAndCheck(...params) {
+  for (param of params) {
+    if (param !== undefined) {
+      return false;
     }
   }
   return true;
