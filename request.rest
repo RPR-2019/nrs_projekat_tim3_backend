@@ -1,22 +1,30 @@
 ###
-GET http://localhost:8080/orders/5/items
+GET http://localhost:8080/orders/15/items
 
 
 ###
 
-DELETE http://localhost:8080/orders/5/items
+DELETE http://localhost:8080/orders
 content-Type: application/json
 
 {
     "supplierId": "1"
 }
 ###
-POST http://localhost:8080/orders/5/items/4
+POST http://localhost:8080/orders
 content-Type: application/json
 
 {
-    "supplierId": "1",
-    "quantity": "5"
+    "korisnicki_racun" : "1",
+    "skladiste_id": "1",
+    "datum_isporuke": "2020-05-19",
+    "orderItems": [
+        {
+            "supplierId": "1",
+            "quantity": "7",
+            "itemId": "5"
+        }
+    ]
 }
 ###
 
