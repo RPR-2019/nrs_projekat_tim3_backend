@@ -126,6 +126,14 @@ router.post("/orders", async (req, res) => {
       res.json({ error: "Wrong params" });
       return;
     }
+    body.orderItems.forEach((element) => {
+      if (
+        undefinedOrCheck(element.itemId, element.quantity, element.supplierId)
+      ) {
+        res.json({ error: "Wrong params" });
+        return;
+      }
+    });
     if (body.korisnicki_racun == null) {
       order.korisnicki_racun = body.korisnicki_racun;
     } else {
