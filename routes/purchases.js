@@ -66,25 +66,21 @@ router.put(
   async (req, res) => {
     let purchase = {};
     purchase.id = req.params.id;
-    if (req.body.naziv !== undefined) {
-      purchase.naziv = htmlEncode(req.body.naziv);
+    if (req.body.korisnicki_racun !== undefined) {
+      req.body.korisnicki_racun !== null
+        ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
+        : (purchase.korisnicki_racun = req.body.korisnicki_racun);
     }
-    if (req.body.proizvodjac !== undefined) {
-      req.body.proizvodjac !== null
-        ? (purchase.proizvodjac = htmlEncode(req.body.proizvodjac))
-        : (purchase.proizvodjac = req.body.proizvodjac);
+    if (req.body.stanje_id !== undefined) {
+      req.body.stanje_id !== null
+        ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
+        : (purchase.stanje_id = req.body.stanje_id);
     }
-    if (req.body.kategorija !== undefined) {
-      req.body.kategorija !== null
-        ? (purchase.kategorija = htmlEncode(req.body.kategorija))
-        : (purchase.kategorija = req.body.kategorija);
-    }
-    queries.updatePurchaseById(purchase, (data, error) => {
+    queries.updatePurchaseById(purchase, (error, data) => {
       if (error) {
         res.writeHead("404");
-        res.write(
-          JSON.stringify({ error: "Manufacturer or category not found" })
-        );
+        console.log(error);
+        res.write(JSON.stringify({ error: "User or condition not found!" }));
       } else if (data == undefined || data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Purchase not found" }));
@@ -98,46 +94,36 @@ router.put(
 );
 
 router.post("/purchases", async (req, res) => {
-  try {
-    let purchase = {};
-    if (req.body.naziv !== undefined) {
-      purchase.naziv = htmlEncode(req.body.naziv);
-    }
-    if (req.body.proizvodjac !== undefined) {
-      req.body.proizvodjac !== null
-        ? (purchase.proizvodjac = htmlEncode(req.body.proizvodjac))
-        : (purchase.proizvodjac = req.body.proizvodjac);
-    }
-    if (req.body.kategorija !== undefined) {
-      req.body.kategorija !== null
-        ? (purchase.kategorija = htmlEncode(req.body.kategorija))
-        : (purchase.kategorija = req.body.kategorija);
-    }
-    queries.addPurchase(purchase, function (error, results, fields) {
-      if (error) {
-        console.log(error);
-        res.writeHead(500);
-        res.write(
-          JSON.stringify({ error: "Manufacturer or category not found!" })
-        );
-        res.send();
-      } else {
-        queries.getPurchaseById(results.insertId, (data) => {
-          if (data == null) {
-            res.writeHead("404");
-            res.write(JSON.stringify({ error: "Purchase not found" }));
-          } else {
-            res.writeHead("200");
-            res.write(JSON.stringify(data));
-          }
-          res.send();
-        });
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send();
+  let purchase = {};
+  if (req.body.korisnicki_racun !== undefined) {
+    req.body.korisnicki_racun !== null
+      ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
+      : (purchase.korisnicki_racun = req.body.korisnicki_racun);
   }
+  if (req.body.stanje_id !== undefined) {
+    req.body.stanje_id !== null
+      ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
+      : (purchase.stanje_id = req.body.stanje_id);
+  }
+  console.log(purchase);
+  queries.addPurchase(purchase, function (error, results, fields) {
+    if (error) {
+      res.writeHead(404);
+      res.write(JSON.stringify({ error: "User or condition not found!" }));
+      res.send();
+    } else {
+      queries.getPurchaseById(results.insertId, (data) => {
+        if (data == null) {
+          res.writeHead("404");
+          res.write(JSON.stringify({ error: "Purchase not found" }));
+        } else {
+          res.writeHead("200");
+          res.write(JSON.stringify(data));
+        }
+        res.send();
+      });
+    }
+  });
 });
 
 module.exports = router;
