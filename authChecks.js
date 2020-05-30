@@ -17,10 +17,9 @@ var authChecks = (function () {
 
   function authRoleImpl(role, req, res, next) {
     return (req, res, next) => {
-      console.log("pravoPristupa: " + req.user.pravo_pristupa);
-      console.log("role: " + role);
+      let user = req.user;
       if (
-        req.user.pravo_pristupa > role ||
+        (user && user.pravo_pristupa > role) ||
         req.body.apy_key !== process.env.API_KEY
       ) {
         res.status(401);
