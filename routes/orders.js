@@ -140,8 +140,8 @@ router.post("/orders", async (req, res) => {
     } else {
       order.datum_isporuke = htmlEncode(body.datum_isporuke);
     }
-    if (body.orderItems != undefined) {
-      order.orderItems = JSON.parse(body.orderItems);
+    if (body.orderItems !== undefined) {
+      order.orderItems = body.orderItems;
     }
     queries.addOrder(order, (error, results) => {
       if (error) {
