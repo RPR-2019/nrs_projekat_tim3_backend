@@ -99,17 +99,16 @@ router.put(
 
 router.post("/purchases", async (req, res) => {
   var body = req.body;
-  if (
-    undefinedOrCheck(
-      body.korisnicki_racun,
-      body.stanje_id,
-      body.purchaseItems.quantity,
-      body.purchaseItems.itemId
-    )
-  ) {
+  if (undefinedOrCheck(body.korisnicki_racun, body.stanje_id)) {
     res.json({ error: "Wrong params" });
     return;
   }
+  body.purchaseItems.forEach((element) => {
+    if (undefinedOrCheck(element.quantity, elements.itemId)) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
+  });
   let purchase = {};
   req.body.korisnicki_racun !== null
     ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
