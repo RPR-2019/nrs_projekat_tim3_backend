@@ -69,26 +69,28 @@ router.put(
     let order = {};
 
     order.id = req.params.id;
-    let body = req.params.body;
+    var body = req.body;
     if (
-      body.korisnicki_racun === undefined &&
-      body.skladiste_id === undefined &&
-      body.datum_isporuke === undefined
+      undefinedCheck(
+        body.korisnicki_racun,
+        body.skladiste_id,
+        body.datum_isporuke
+      )
     ) {
       res.json({ error: "Wrong params" });
       return;
     }
-    if (req.body.korisnicki_racun !== undefined) {
-      order.korisnicki_racun = htmlEncode(req.body.korisnicki_racun);
+    if (body.korisnicki_racun !== undefined) {
+      order.korisnicki_racun = htmlEncode(body.korisnicki_racun);
     }
-    if (req.body.skladiste_id !== undefined) {
-      order.skladiste_id = htmlEncode(req.body.skladiste_id);
+    if (body.skladiste_id !== undefined) {
+      order.skladiste_id = htmlEncode(body.skladiste_id);
     }
-    if (req.body.datum_isporuke !== undefined) {
-      if (req.body.datum_isporuke !== null) {
-        order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
+    if (body.datum_isporuke !== undefined) {
+      if (body.datum_isporuke !== null) {
+        order.datum_isporuke = htmlEncode(body.datum_isporuke);
       } else {
-        order.datum_isporuke = req.body.datum_isporuke;
+        order.datum_isporuke = body.datum_isporuke;
       }
     }
 
@@ -112,38 +114,40 @@ router.post("/orders", async (req, res) => {
   try {
     let order = {};
     //params check
-    let body = req.params.body;
+    var body = req.body;
     if (
-      body.korisnicki_racun === undefined &&
-      body.skladiste_id === undefined &&
-      body.datum_isporuke === undefined
+      undefinedCheck(
+        body.korisnicki_racun,
+        body.skladiste_id,
+        body.datum_isporuke
+      )
     ) {
       res.json({ error: "Wrong params" });
       return;
     }
-    if (req.body.korisnicki_racun != undefined) {
-      if (req.body.korisnicki_racun == null) {
-        order.korisnicki_racun = req.body.korisnicki_racun;
+    if (body.korisnicki_racun != undefined) {
+      if (body.korisnicki_racun == null) {
+        order.korisnicki_racun = body.korisnicki_racun;
       } else {
-        order.korisnicki_racun = htmlEncode(req.body.korisnicki_racun);
+        order.korisnicki_racun = htmlEncode(body.korisnicki_racun);
       }
     }
-    if (req.body.skladiste_id != undefined) {
-      if (req.body.skladiste_id == null) {
-        order.skladiste_id = req.body.skladiste_id;
+    if (body.skladiste_id != undefined) {
+      if (body.skladiste_id == null) {
+        order.skladiste_id = body.skladiste_id;
       } else {
-        order.skladiste_id = htmlEncode(req.body.skladiste_id);
+        order.skladiste_id = htmlEncode(body.skladiste_id);
       }
     }
-    if (req.body.datum_isporuke != undefined) {
-      if (req.body.datum_isporuke == null) {
-        order.datum_isporuke = req.body.datum_isporuke;
+    if (body.datum_isporuke != undefined) {
+      if (body.datum_isporuke == null) {
+        order.datum_isporuke = body.datum_isporuke;
       } else {
-        order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
+        order.datum_isporuke = htmlEncode(body.datum_isporuke);
       }
     }
-    if (req.body.orderItems != undefined) {
-      order.orderItems = JSON.parse(req.body.orderItems);
+    if (body.orderItems != undefined) {
+      order.orderItems = JSON.parse(body.orderItems);
     }
     queries.addOrder(order, (error, results) => {
       if (error) {
