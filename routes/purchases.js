@@ -126,4 +126,11 @@ router.post("/purchases", async (req, res) => {
   });
 });
 
+router.all(
+  ["/purchases/:id/items", "/purchases/:id/items*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./purchaseItems")
+);
+
 module.exports = router;
