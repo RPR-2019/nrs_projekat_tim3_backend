@@ -69,16 +69,13 @@ router.put(
   async (req, res) => {
     let purchase = {};
     purchase.id = req.params.id;
-    if (req.body.korisnicki_racun !== undefined) {
-      req.body.korisnicki_racun !== null
-        ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
-        : (purchase.korisnicki_racun = req.body.korisnicki_racun);
-    }
-    if (req.body.stanje_id !== undefined) {
-      req.body.stanje_id !== null
-        ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
-        : (purchase.stanje_id = req.body.stanje_id);
-    }
+    req.body.korisnicki_racun !== null
+      ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
+      : (purchase.korisnicki_racun = req.body.korisnicki_racun);
+
+    req.body.stanje_id !== null
+      ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
+      : (purchase.stanje_id = req.body.stanje_id);
     queries.updatePurchaseById(purchase, (error, data) => {
       if (error) {
         res.writeHead("404");
@@ -97,16 +94,14 @@ router.put(
 
 router.post("/purchases", async (req, res) => {
   let purchase = {};
-  if (req.body.korisnicki_racun !== undefined) {
-    req.body.korisnicki_racun !== null
-      ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
-      : (purchase.korisnicki_racun = req.body.korisnicki_racun);
-  }
-  if (req.body.stanje_id !== undefined) {
-    req.body.stanje_id !== null
-      ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
-      : (purchase.stanje_id = req.body.stanje_id);
-  }
+  req.body.korisnicki_racun !== null
+    ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
+    : (purchase.korisnicki_racun = req.body.korisnicki_racun);
+
+  req.body.stanje_id !== null
+    ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
+    : (purchase.stanje_id = req.body.stanje_id);
+
   purchase.purchaseItems = body.purchaseItems;
   queries.addPurchase(purchase, function (error, results, fields) {
     if (error) {
@@ -152,3 +147,21 @@ router.all(
 );
 
 module.exports = router;
+
+function undefinedOrCheck(...params) {
+  for (param of params) {
+    if (param === undefined) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function undefinedAndCheck(...params) {
+  for (param of params) {
+    if (param !== undefined) {
+      return false;
+    }
+  }
+  return true;
+}
