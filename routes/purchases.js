@@ -4,6 +4,7 @@ const authChecks = require("../authChecks.js");
 const flash = require("express-flash");
 const connection = require("../database.js");
 const queries = require("../queries/purchasesQueries.js");
+const queriesItems = require("../queries/purchaseItemsQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
@@ -106,22 +107,39 @@ router.post("/purchases", async (req, res) => {
       ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
       : (purchase.stanje_id = req.body.stanje_id);
   }
+  purchase.purchaseItems = body.purchaseItems;
   queries.addPurchase(purchase, function (error, results, fields) {
     if (error) {
       res.writeHead(404);
       res.write(JSON.stringify({ error: "User or condition not found!" }));
       res.send();
     } else {
-      queries.getPurchaseById(results.insertId, (data) => {
-        if (data == null) {
-          res.writeHead("404");
-          res.write(JSON.stringify({ error: "Purchase not found" }));
-        } else {
-          res.writeHead("200");
-          res.write(JSON.stringify(data));
-        }
-        res.send();
+      let done = true;
+      order.purchaseItems.forEach((element) => {
+        queriesItems.addPurchaseItems(
+          results[0].id,
+          element.itemId,
+          element.quantity,
+          (error, data) => {
+            if (error) {
+              res.json(error);
+              return;
+            }
+          }
+        );
       });
+      if (done) {
+        queries.getPurchaseById(results.insertId, (data) => {
+          if (data == null) {
+            res.writeHead("404");
+            res.write(JSON.stringify({ error: "Purchase not found" }));
+          } else {
+            res.writeHead("200");
+            res.write(JSON.stringify(data));
+          }
+          res.send();
+        });
+      }
     }
   });
 });
