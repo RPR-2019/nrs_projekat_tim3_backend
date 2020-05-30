@@ -29,32 +29,29 @@ router.post(
   (req, res) => {
     let purchaseId = req.params.id;
     let itemId = req.params.itemId;
-    let supplierId = req.body.supplierId;
     let quantity = req.body.quantity;
-    if (!quantity || !supplierId || !itemId || !purchaseId) {
+    if (!quantity || !itemId || !purchaseId) {
       res.json({ error: "Invalid params." });
       return;
     }
     quantity = htmlEncode(quantity);
-    queries.addPurchaseItems(
-      purchaseId,
-      itemId,
-      quantity,
-      supplierId,
-      function (error, results, fields) {
-        if (error) {
-          if (error.error) {
-            res.json(error);
-          } else {
-            res.json({
-              error: "Purchase already has that item from that supplier.",
-            });
-          }
+    queries.addPurchaseItems(purchaseId, itemId, quantity, function (
+      error,
+      results,
+      fields
+    ) {
+      if (error) {
+        if (error.error) {
+          res.json(error);
         } else {
-          res.json({ success: "Item added to purchase." });
+          res.json({
+            error: "Purchase already has that item.",
+          });
         }
+      } else {
+        res.json({ success: "Item added to purchase." });
       }
-    );
+    });
   }
 );
 
@@ -65,12 +62,11 @@ router.delete(
   (req, res) => {
     let purchaseId = req.params.id;
     let itemId = req.params.itemId;
-    let supplierId = req.body.supplierId;
-    if (!supplierId || !itemId || !purchaseId) {
+    if (!itemId || !purchaseId) {
       res.json({ error: "Invalid params." });
       return;
     }
-    queries.deletePurchaseItemsById(purchaseId, itemId, supplierId, function (
+    queries.deletePurchaseItemById(purchaseId, itemId, function (
       error,
       results,
       fields
