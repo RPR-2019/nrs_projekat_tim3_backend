@@ -119,7 +119,8 @@ router.post("/orders", async (req, res) => {
       undefinedOrCheck(
         body.korisnicki_racun,
         body.skladiste_id,
-        body.datum_isporuke
+        body.datum_isporuke,
+        body.orderItems
       )
     ) {
       res.json({ error: "Wrong params" });
@@ -140,9 +141,7 @@ router.post("/orders", async (req, res) => {
     } else {
       order.datum_isporuke = htmlEncode(body.datum_isporuke);
     }
-    if (body.orderItems !== undefined) {
-      order.orderItems = body.orderItems;
-    }
+    order.orderItems = body.orderItems;
     queries.addOrder(order, (error, results) => {
       if (error) {
         res.json(error);
