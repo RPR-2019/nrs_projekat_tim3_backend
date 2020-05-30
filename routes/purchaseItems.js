@@ -111,26 +111,23 @@ router.put(
   (req, res) => {
     let purchaseId = req.params.id;
     let itemId = req.params.itemId;
-    let supplierId = req.body.supplierId;
     let quantity = req.body.quantity;
-    if (!quantity || !supplierId || !itemId || !purchaseId) {
+    if (!quantity || !itemId || !purchaseId) {
       res.json({ error: "Invalid params." });
       return;
     }
     quantity = htmlEncode(quantity);
-    queries.updatePurchaseItemsById(
-      purchaseId,
-      itemId,
-      quantity,
-      supplierId,
-      function (error, results, fields) {
-        if (error) {
-          res.json(error);
-        } else {
-          res.json({ success: "Purchase item updated." });
-        }
+    queries.updatePurchaseItemsById(purchaseId, itemId, quantity, function (
+      error,
+      results,
+      fields
+    ) {
+      if (error) {
+        res.json(error);
+      } else {
+        res.json({ success: "Purchase item updated." });
       }
-    );
+    });
   }
 );
 
