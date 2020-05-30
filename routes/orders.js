@@ -186,6 +186,15 @@ router.post("/orders", async (req, res) => {
   }
 });
 
+function undefinedCheck(...params) {
+  for (param of params) {
+    if (param === undefined) {
+      return true;
+    }
+  }
+  return true;
+}
+
 router.all(
   ["/orders/:id/items", "/orders/:id/items*"],
   //authChecks.checkAuthenticated,
