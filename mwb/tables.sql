@@ -355,3 +355,11 @@ VALUES (
 	"$2b$10$bXtk.6HbvmPfNXA5HMeJXeK//J2MjWcBGbioO6bjw.NWO2WQErflm",
 	"admin@admin.com"
 	);
+
+INSERT INTO stanja_kupovine(stanje) VALUES("kreirana");
+INSERT INTO stanja_kupovine(stanje) VALUES("primljena");
+INSERT INTO stanja_kupovine(stanje) VALUES("u obradi");
+INSERT INTO stanja_kupovine(stanje) VALUES("otpremljena");
+INSERT INTO stanja_kupovine(stanje) VALUES("blokirana");
+INSERT INTO stanja_kupovine(stanje) VALUES("odbijena");
+INSERT INTO stanja_kupovine(stanje) VALUES("obrisana");
