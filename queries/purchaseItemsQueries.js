@@ -20,7 +20,7 @@ var queries = (function () {
   }
 
   function addPurchaseItemsImpl(purchaseId, itemId, quantity, callback) {
-    checkAll(purchaseId, itemId, supplierId, callback, () => {
+    checkAll(purchaseId, itemId, callback, () => {
       connection.query(
         "INSERT INTO proizvodi_kupovine(proizvod_id, kolicina, kupovina_id)" +
           " VALUES(?,?,?)",
@@ -79,7 +79,20 @@ var queries = (function () {
           if (data == null) {
             callback({ error: "Item not found" });
           } else {
-            resolve();
+            connection.query(
+              "SELECT * FROM proizvodi_kupovine WHERE kupovina_id=? AND proizvod_id=?",
+              [purchaseId, itemId],
+              (error, results) => {
+                if (error) {
+                  callback(error);
+                  return;
+                } else if (results[0] == null) {
+                  resolve(0);
+                } else {
+                  resolve(1);
+                }
+              }
+            );
           }
         });
       }
