@@ -1,10 +1,9 @@
-const purchasesQ = require("../queries/purchasesQueries.js");
 const itemQ = require("../queries/itemsQueries.js");
 const connection = require("../database.js");
 
 var queries = (function () {
   function getPurchaseItemsByIdImpl(id, callback) {
-    purchasesQ.getPurchaseById(id, (error, data) => {
+    getPurchaseById(id, (error, data) => {
       if (error) {
         callback(error);
       } else if (data[0] == null) {
@@ -49,7 +48,7 @@ var queries = (function () {
     });
   }
   function deleteAllPurchaseItemsByIdImpl(purchaseId, callback) {
-    purchasesQ.getPurchaseById(purchaseId, (error, data) => {
+    getPurchaseById(purchaseId, (error, data) => {
       if (error) {
         callback(error);
       } else if (data[0] == null) {
@@ -80,7 +79,7 @@ var queries = (function () {
   }
 
   function checkAll(purchaseId, itemId, callback, resolve) {
-    purchasesQ.getPurchaseById(purchaseId, (error, data) => {
+    getPurchaseById(purchaseId, (error, data) => {
       if (error) {
         callback(error);
         return;
@@ -109,6 +108,10 @@ var queries = (function () {
         });
       }
     });
+  }
+
+  function getPurchaseById(id, callback) {
+    connection.query("SELECT * FROM kupovine where id = ?", [id], callback);
   }
 
   return {
