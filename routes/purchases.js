@@ -67,6 +67,11 @@ router.put(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   async (req, res) => {
+    var body = req.body;
+    if (undefinedAndCheck(body.korisnicki_racun, body.stanje_id)) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
     let purchase = {};
     purchase.id = req.params.id;
     req.body.korisnicki_racun !== null
