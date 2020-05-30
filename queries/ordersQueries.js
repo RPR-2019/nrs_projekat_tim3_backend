@@ -64,7 +64,6 @@ var queries = (function () {
       let query =
         "INSERT INTO narudzbe(korisnicki_racun, skladiste_id, datum_isporuke)" +
         "VALUES (?,?,?)";
-      console.log(order.datum_isporuke);
 
       connection.query(
         query,
@@ -85,17 +84,13 @@ var queries = (function () {
       if (data == null) {
         callback(1);
       } else {
-        warehousesQ.getWarehouseById(
-          connection,
-          order.skladiste_id,
-          (result) => {
-            if (result == null) {
-              callback(1);
-            } else {
-              done();
-            }
+        warehousesQ.getWarehouseById(order.skladiste_id, (result) => {
+          if (result == null) {
+            callback(1);
+          } else {
+            done();
           }
-        );
+        });
       }
     });
   }
