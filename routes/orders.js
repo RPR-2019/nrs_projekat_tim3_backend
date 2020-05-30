@@ -111,6 +111,16 @@ router.put(
 router.post("/orders", async (req, res) => {
   try {
     let order = {};
+    //params check
+    let body = req.params.body;
+    if (
+      body.korisnicki_racun === undefined &&
+      body.skladiste_id === undefined &&
+      body.datum_isporuke === undefined
+    ) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
     if (req.body.korisnicki_racun != undefined) {
       if (req.body.korisnicki_racun == null) {
         order.korisnicki_racun = req.body.korisnicki_racun;
