@@ -24,7 +24,7 @@ var queries = (function () {
 
   function deleteItemByIdImpl(id, callback) {
     getItemByIdImpl(id, (data) => {
-      if (data === undefined || data === null) {
+      if (data == null) {
         callback(1);
       } else {
         let query = "DELETE FROM proizvodi WHERE id=" + id;
