@@ -24,9 +24,10 @@ var queries = (function () {
 
   function deletePurchaseByIdImpl(id, callback) {
     getPurchaseByIdImpl(id, (data) => {
-      if (data === null) {
+      if (data == null) {
         callback(1);
       } else {
+        //TODO cascade delete
         let query = "DELETE FROM kupovine WHERE id=" + id;
         connection.query(query, callback);
       }
@@ -36,18 +37,14 @@ var queries = (function () {
   function updatePurchaseByIdImpl(purchase, callback) {
     let query = "UPDATE kupovine SET ";
     let params = [];
-    if (purchase.naziv !== undefined) {
-      query += "naziv=?,";
-      params.push(purchase.naziv);
+    if (purchase.stanje_id !== undefined) {
+      query += "stanje_id=?,";
+      params.push(purchase.stanje_id);
     }
     //enables null to be passed
-    if (purchase.proizvodjac !== undefined) {
-      query += "proizvodjac=?,";
-      params.push(purchase.proizvodjac);
-    }
-    if (purchase.kategorija !== undefined) {
-      query += "kategorija=?";
-      params.push(purchase.kategorija);
+    if (purchase.korisnicki_racun !== undefined) {
+      query += "korisnicki_racun=?,";
+      params.push(purchase.korisnicki_racun);
     }
     params.push(purchase.id);
     if (query.slice(-1) == ",") {
@@ -56,7 +53,7 @@ var queries = (function () {
     query += " WHERE id=?";
     connection.query(query, params, (error, results, fields) => {
       if (error) {
-        callback(null, 1);
+        callback(error);
       } else {
         getPurchaseByIdImpl(purchase.id, callback);
       }
@@ -65,10 +62,10 @@ var queries = (function () {
 
   function addPurchaseImpl(purchase, callback) {
     let query =
-      "INSERT INTO kupovine (naziv, proizvodjac, kategorija) VALUES (?,?,?)";
+      "INSERT INTO kupovine (korisnicki_racun, stanje_id) VALUES (?,?)";
     connection.query(
       query,
-      [purchase.naziv, purchase.proizvodjac, purchase.kategorija],
+      [purchase.korisnicki_racun, purchase.stanje_id],
       callback
     );
   }
