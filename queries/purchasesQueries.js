@@ -3,18 +3,21 @@ const queriesItems = require("../queries/purchaseItemsQueries.js");
 
 var queries = (function () {
   function getPurchasesImpl(callback) {
-    connection.query("SELECT * FROM kupovine", function (
-      error,
-      results,
-      fields
-    ) {
-      if (error) throw error;
-      callback(results);
-    });
+    connection.query(
+      "SELECT k.id, k.korisnicki_racun, k.stanje_id, s.stanje FROM kupovine k INNER JOIN stanja_kupovine s ON (k.stanje_id=s.id)",
+      function (error, results, fields) {
+        if (error) throw error;
+        callback(results);
+      }
+    );
   }
 
   function getPurchaseByIdImpl(id, callback) {
-    connection.query("SELECT * FROM kupovine where id = ?", [id], callback);
+    connection.query(
+      "SELECT k.id, k.korisnicki_racun, k.stanje_id, s.stanje FROM kupovine k INNER JOIN stanja_kupovine s ON (k.stanje_id=s.id) WHERE k.id = ?",
+      [id],
+      callback
+    );
   }
 
   function deletePurchaseByIdImpl(id, callback) {
