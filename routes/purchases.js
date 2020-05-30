@@ -26,8 +26,10 @@ router.get(
   //authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
-    queries.getPurchaseById(req.params.id, (data) => {
-      if (data == null) {
+    queries.getPurchaseById(req.params.id, (error, data) => {
+      if (error) {
+        res.json(error);
+      } else if (data == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Purchase not found" }));
       } else {
@@ -79,7 +81,6 @@ router.put(
     queries.updatePurchaseById(purchase, (error, data) => {
       if (error) {
         res.writeHead("404");
-        console.log(error);
         res.write(JSON.stringify({ error: "User or condition not found!" }));
       } else if (data == undefined || data == null) {
         res.writeHead("404");
@@ -105,7 +106,6 @@ router.post("/purchases", async (req, res) => {
       ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
       : (purchase.stanje_id = req.body.stanje_id);
   }
-  console.log(purchase);
   queries.addPurchase(purchase, function (error, results, fields) {
     if (error) {
       res.writeHead(404);
