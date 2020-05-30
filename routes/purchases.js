@@ -104,7 +104,7 @@ router.post("/purchases", async (req, res) => {
     return;
   }
   body.purchaseItems.forEach((element) => {
-    if (undefinedOrCheck(element.quantity, elements.itemId)) {
+    if (undefinedOrCheck(element.quantity, element.itemId)) {
       res.json({ error: "Wrong params" });
       return;
     }
