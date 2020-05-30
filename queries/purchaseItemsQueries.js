@@ -31,13 +31,17 @@ var queries = (function () {
   }
 
   function deletePurchaseItemByIdImpl(purchaseId, itemId, callback) {
-    checkAll(purchaseId, itemId, callback, () => {
-      connection.query(
-        "DELETE FROM proizvodi_kupovine " +
-          "WHERE kupovina_id=? and proizvod_id=?",
-        [purchaseId, itemId],
-        callback
-      );
+    checkAll(purchaseId, itemId, callback, (itemExists) => {
+      if (itemExists) {
+        connection.query(
+          "DELETE FROM proizvodi_kupovine " +
+            "WHERE kupovina_id=? and proizvod_id=?",
+          [purchaseId, itemId],
+          callback
+        );
+      } else {
+        callback({ error: "Purchase doesn't have that item" });
+      }
     });
   }
   function deleteAllPurchaseItemsByIdImpl(purchaseId, callback) {
