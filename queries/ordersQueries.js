@@ -71,7 +71,7 @@ var queries = (function () {
         [order.korisnicki_racun, order.skladiste_id, order.datum_isporuke],
         function (error, results, fields) {
           if (error) {
-            callback(error);
+            callback({ error: "Item or warehouse not found" });
           } else {
             getOrderByIdImpl(results.insertId, callback);
           }
