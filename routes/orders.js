@@ -4,6 +4,7 @@ const authChecks = require("../authChecks.js");
 const flash = require("express-flash");
 const connection = require("../database.js");
 const queries = require("../queries/ordersQueries.js");
+const itemsQ = require("../queries/orderItemsQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
@@ -68,6 +69,15 @@ router.put(
     let order = {};
 
     order.id = req.params.id;
+    let body = req.params.body;
+    if (
+      body.korisnicki_racun === undefined &&
+      body.skladiste_id === undefined &&
+      body.datum_isporuke === undefined
+    ) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
     if (req.body.korisnicki_racun !== undefined) {
       order.korisnicki_racun = htmlEncode(req.body.korisnicki_racun);
     }
