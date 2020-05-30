@@ -122,9 +122,9 @@ router.post("/purchases", async (req, res) => {
       res.send();
     } else {
       let done = true;
-      order.purchaseItems.forEach((element) => {
+      purchase.purchaseItems.forEach((element) => {
         queriesItems.addPurchaseItems(
-          results[0].id,
+          results.insertId,
           element.itemId,
           element.quantity,
           (error, data) => {
