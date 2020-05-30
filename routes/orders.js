@@ -125,26 +125,20 @@ router.post("/orders", async (req, res) => {
       res.json({ error: "Wrong params" });
       return;
     }
-    if (body.korisnicki_racun != undefined) {
-      if (body.korisnicki_racun == null) {
-        order.korisnicki_racun = body.korisnicki_racun;
-      } else {
-        order.korisnicki_racun = htmlEncode(body.korisnicki_racun);
-      }
+    if (body.korisnicki_racun == null) {
+      order.korisnicki_racun = body.korisnicki_racun;
+    } else {
+      order.korisnicki_racun = htmlEncode(body.korisnicki_racun);
     }
-    if (body.skladiste_id != undefined) {
-      if (body.skladiste_id == null) {
-        order.skladiste_id = body.skladiste_id;
-      } else {
-        order.skladiste_id = htmlEncode(body.skladiste_id);
-      }
+    if (body.skladiste_id == null) {
+      order.skladiste_id = body.skladiste_id;
+    } else {
+      order.skladiste_id = htmlEncode(body.skladiste_id);
     }
-    if (body.datum_isporuke != undefined) {
-      if (body.datum_isporuke == null) {
-        order.datum_isporuke = body.datum_isporuke;
-      } else {
-        order.datum_isporuke = htmlEncode(body.datum_isporuke);
-      }
+    if (body.datum_isporuke == null) {
+      order.datum_isporuke = body.datum_isporuke;
+    } else {
+      order.datum_isporuke = htmlEncode(body.datum_isporuke);
     }
     if (body.orderItems != undefined) {
       order.orderItems = JSON.parse(body.orderItems);
@@ -174,7 +168,7 @@ router.post("/orders", async (req, res) => {
                     error: "Order already has that item from that supplier.",
                   });
                 }
-                break;
+                return;
               }
             }
           );
