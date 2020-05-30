@@ -56,17 +56,11 @@ var queries = (function () {
     });
   }
 
-  function updatePurchaseItemsByIdImpl(
-    purchaseId,
-    itemId,
-    quantity,
-    supplierId,
-    callback
-  ) {
+  function updatePurchaseItemsByIdImpl(purchaseId, itemId, quantity, callback) {
     checkAll(purchaseId, itemId, callback, () => {
       connection.query(
         "UPDATE proizvodi_kupovine SET kolicina=?" +
-          "WHERE kupovina_id=? AND proizvod_id=? AND dobavljac_id=?",
+          "WHERE kupovina_id=? AND proizvod_id=?",
         [quantity, purchaseId, itemId],
         callback
       );
