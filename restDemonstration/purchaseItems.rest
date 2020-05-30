@@ -1,0 +1,33 @@
+###
+//get all items of purchase with id 1
+GET http://localhost:8080/purchases/1/items
+
+
+###
+
+DELETE http://localhost:8080/purchases/1/items/7
+
+###
+
+DELETE http://localhost:8080/purchases/1/items
+
+###
+
+//quantity is mandatory
+PUT http://localhost:8080/purchases/1/items/7
+content-Type: application/json
+
+{
+    "quantity": "5"
+}
+
+###
+//quantity is mandatory
+POST http://localhost:8080/purchases/1/items/7
+content-Type: application/json
+
+{
+    "quantity": "15"
+}
+
+###
