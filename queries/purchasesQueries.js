@@ -13,17 +13,11 @@ var queries = (function () {
   }
 
   function getPurchaseByIdImpl(id, callback) {
-    connection.query("SELECT * FROM kupovine where id = ?", [id], function (
-      error,
-      results
-    ) {
-      if (error) throw error;
-      callback(results[0]);
-    });
+    connection.query("SELECT * FROM kupovine where id = ?", [id], callback);
   }
 
   function deletePurchaseByIdImpl(id, callback) {
-    getPurchaseByIdImpl(id, (data) => {
+    getPurchaseByIdImpl(id, (error, data) => {
       if (data == null) {
         callback(1);
       } else {
