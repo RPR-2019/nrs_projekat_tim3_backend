@@ -1,4 +1,5 @@
 const connection = require("../database.js");
+const queriesItems = require("../queries/purchaseItemsQueries.js");
 
 var queries = (function () {
   function getPurchasesImpl(callback) {
@@ -21,9 +22,14 @@ var queries = (function () {
       if (data == null) {
         callback(1);
       } else {
-        //TODO cascade delete
-        let query = "DELETE FROM kupovine WHERE id=" + id;
-        connection.query(query, callback);
+        queriesItems.deleteAllPurchaseItemsById(id, (error, data) => {
+          if (error) {
+            callback(error);
+          } else {
+            let query = "DELETE FROM kupovine WHERE id=" + id;
+            connection.query(query, callback);
+          }
+        });
       }
     });
   }
