@@ -82,66 +82,67 @@ app.all(
 
 app.all(
   ["/users", "/users*"],
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.checkAuthenticated,
+  authChecks.authRole(ROLE.ADMIN),
   require("./routes/users")
 );
 
 app.all(
   ["/people", "/people*"],
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.checkAuthenticated,
+  authChecks.authRole(ROLE.ADMIN),
   require("./routes/people")
 );
 
 app.all(
   ["/manufacturers", "/manufacturers*"],
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.checkAuthenticated,
+  authChecks.authRole(ROLE.ADMIN),
   require("./routes/manufacturers")
 );
 
 app.all(
   ["/categories", "/categories*"],
-  //authChecks.checkAuthenticated,
+  authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/categories")
 );
 
 app.all(
   ["/items", "/items*"],
-  //authChecks.checkAuthenticated,
+  authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/items")
 );
 
 app.all(
   ["/warehouses", "/warehouses*"],
-  //authChecks.checkAuthenticated,
+  authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/warehouses")
 );
 
 app.all(
   ["/suppliers", "/suppliers*"],
-  //authChecks.checkAuthenticated,
+  authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/suppliers")
 );
 
 app.all(
   ["/orders", "/orders*"],
-  //authChecks.checkAuthenticated,
+  authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/orders")
 );
 
 app.all(
   ["/purchases", "/purchases*"],
-  //authChecks.checkAuthenticated,
+  authChecks.checkAuthenticated,
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/purchases")
 );
+
 //app.listen(process.env.PORT || 8080);
 
 //https
