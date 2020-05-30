@@ -100,7 +100,12 @@ router.put(
 router.post("/purchases", async (req, res) => {
   var body = req.body;
   if (
-    undefinedOrCheck(body.korisnicki_racun, body.stanje_id, body.purchaseItems)
+    undefinedOrCheck(
+      body.korisnicki_racun,
+      body.stanje_id,
+      body.purchaseItems.quantity,
+      body.purchaseItems.itemId
+    )
   ) {
     res.json({ error: "Wrong params" });
     return;
@@ -129,6 +134,7 @@ router.post("/purchases", async (req, res) => {
           element.quantity,
           (error, data) => {
             if (error) {
+              done = false;
               res.json(error);
               return;
             }
@@ -136,7 +142,7 @@ router.post("/purchases", async (req, res) => {
         );
       });
       if (done) {
-        queries.getPurchaseById(results.insertId, (data) => {
+        queries.getPurchaseById(results.insertId, (error, data) => {
           if (data == null) {
             res.writeHead("404");
             res.write(JSON.stringify({ error: "Purchase not found" }));
