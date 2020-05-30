@@ -1,5 +1,6 @@
 const usersQ = require("../queries/usersQueries.js");
 const warehousesQ = require("../queries/warehousesQueries.js");
+const items = require("../queries/orderItemsQueries.js");
 const connection = require("../database.js");
 
 var queries = (function () {
@@ -23,8 +24,14 @@ var queries = (function () {
       if (results[0] == null) {
         callback(1);
       } else {
-        let query = "DELETE FROM narudzbe WHERE id=" + id;
-        connection.query(query, callback);
+        items.deleteAllOrderItemsById(id, (error) => {
+          if (error) {
+            callback(error);
+          } else {
+            let query = "DELETE FROM narudzbe WHERE id=" + id;
+            connection.query(query, callback);
+          }
+        });
       }
     });
   }
