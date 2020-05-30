@@ -4,7 +4,7 @@ const authChecks = require("../authChecks.js");
 const flash = require("express-flash");
 const connection = require("../database.js");
 const queries = require("../queries/ordersQueries.js");
-const itemsQ = require("../queries/orderItemsQueries.js");
+const orderItemsQ = require("../queries/orderItemsQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
@@ -142,17 +142,42 @@ router.post("/orders", async (req, res) => {
         order.datum_isporuke = htmlEncode(req.body.datum_isporuke);
       }
     }
+    if (req.body.orderItems != undefined) {
+      order.orderItems = JSON.parse(req.body.orderItems);
+    }
     queries.addOrder(order, (error, results) => {
       if (error) {
-        res.writeHead("404");
-        res.write(JSON.stringify({ error: "User or warehouse not found!" }));
-        res.send();
+        res.json(error);
       } else if (results == null) {
         res.writeHead("404");
         res.write(JSON.stringify({ error: "Order not found" }));
         res.send();
       } else {
-        res.json(results);
+        let done = true;
+        order.orderItems.forEach((element) => {
+          orderItemsQ.addOrderItems(
+            results[0].id,
+            element.itemId,
+            element.quantity,
+            element.supplierId,
+            (error, data) => {
+              if (error) {
+                done = false;
+                if (error.error) {
+                  res.json(error);
+                } else {
+                  res.json({
+                    error: "Order already has that item from that supplier.",
+                  });
+                }
+                break;
+              }
+            }
+          );
+        });
+        if (done) {
+          res.json(results);
+        }
       }
     });
   } catch (error) {
