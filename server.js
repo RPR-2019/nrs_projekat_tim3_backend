@@ -135,6 +135,13 @@ app.all(
   //authChecks.authRole(ROLE.ADMIN),
   require("./routes/orders")
 );
+
+app.all(
+  ["/purchases", "/purchases*"],
+  //authChecks.checkAuthenticated,
+  //authChecks.authRole(ROLE.ADMIN),
+  require("./routes/purchases")
+);
 //app.listen(process.env.PORT || 8080);
 
 //https
