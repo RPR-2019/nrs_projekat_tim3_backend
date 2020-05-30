@@ -57,13 +57,17 @@ var queries = (function () {
   }
 
   function updatePurchaseItemsByIdImpl(purchaseId, itemId, quantity, callback) {
-    checkAll(purchaseId, itemId, callback, () => {
-      connection.query(
-        "UPDATE proizvodi_kupovine SET kolicina=?" +
-          "WHERE kupovina_id=? AND proizvod_id=?",
-        [quantity, purchaseId, itemId],
-        callback
-      );
+    checkAll(purchaseId, itemId, callback, (itemExists) => {
+      if (itemExists) {
+        connection.query(
+          "UPDATE proizvodi_kupovine SET kolicina=?" +
+            "WHERE kupovina_id=? AND proizvod_id=?",
+          [quantity, purchaseId, itemId],
+          callback
+        );
+      } else {
+        callback({ error: "Purchase doesn't have that item" });
+      }
     });
   }
 
