@@ -1,4 +1,5 @@
 require("dotenv").config();
+const queries = require("./queries/purchasesQueries.js");
 
 var authChecks = (function () {
   var checkAuthenticatedImpl = function (req, res, next) {
@@ -34,14 +35,11 @@ var authChecks = (function () {
   function checkPurchaseImpl(req, res, next) {
     if (!req.user || !req.user.id) {
       res.json({ error: "Not allowed" });
-    } else if (
-      req.body.apy_key === process.env.API_KEY ||
-      res.user.pravo_pristupa == 1
-    ) {
+    } else if (req.body.apy_key === process.env.API_KEY) {
       next();
     } else {
       queries.getPurchaseById(req.params.id, (error, results) => {
-        if (results[0].korisnicki_racun != res.body.id) {
+        if (results[0].korisnicki_racun != req.user.id) {
           res.json({ error: "Not allowed" });
         } else {
           next();
