@@ -110,7 +110,7 @@ var queries = (function () {
     });
   }
 
-  function getPurchaseById(id, callback) {
+  function getPurchaseByIdImpl(id, callback) {
     connection.query("SELECT * FROM kupovine where id = ?", [id], callback);
   }
 
@@ -120,6 +120,7 @@ var queries = (function () {
     deletePurchaseItemById: deletePurchaseItemByIdImpl,
     updatePurchaseItemsById: updatePurchaseItemsByIdImpl,
     deleteAllPurchaseItemsById: deleteAllPurchaseItemsByIdImpl,
+    getPurchaseById: getPurchaseByIdImpl,
   };
 })();
 
