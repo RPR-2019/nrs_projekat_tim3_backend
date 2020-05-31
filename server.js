@@ -103,14 +103,12 @@ app.all(
 app.all(
   ["/categories", "/categories*"],
   authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
   require("./routes/categories")
 );
 
 app.all(
   ["/items", "/items*"],
   authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
   require("./routes/items")
 );
 
@@ -143,21 +141,6 @@ app.all(
 );
 
 //app.listen(process.env.PORT || 8080);
-
-//https
-//https.createServer(options, app).listen(8080);
-
-/*
-// set up a route to redirect http to https
-http.createServer(
-    function (req, res) {
-        res.redirect('https://' + req.headers.host + req.url);
-
-        // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
-        // res.redirect('https://example.com' + req.url);
-    }
-).listen(8080);
-*/
 
 //http(s) proxy
 
