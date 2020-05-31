@@ -19,7 +19,8 @@ var authChecks = (function () {
     return (req, res, next) => {
       let user = req.user;
       if (
-        (user && user.pravo_pristupa > role) ||
+        user &&
+        user.pravo_pristupa > role &&
         req.body.apy_key !== process.env.API_KEY
       ) {
         res.status(401);
