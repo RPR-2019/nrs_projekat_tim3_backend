@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `skladista`.`proizvodi` (
   `naziv` VARCHAR(45) NULL,
   `proizvodjac` INT UNSIGNED NULL,
   `kategorija` INT UNSIGNED NULL,
-  `cijena` DECIMAL NULL DEFAULT NULL
+  `cijena` DECIMAL NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `proiz_kat_fk`
     FOREIGN KEY (`kategorija`)
