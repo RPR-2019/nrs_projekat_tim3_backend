@@ -7,7 +7,7 @@ const queries = require("../queries/manufacturersQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
-router.get("/manufacturers", (req, res) => {
+router.get("/manufacturers", authChecks.authRole(ROLE.KUPAC), (req, res) => {
   queries.getManufacturers((data) => res.json(data));
 });
 
