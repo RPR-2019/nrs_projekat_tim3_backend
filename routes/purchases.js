@@ -52,14 +52,18 @@ router.delete("/purchases/:id", authChecks.checkPurchase, (req, res) => {
   });
 });
 
-router.put("/purchases/:id", async (req, res) => {
+router.put("/purchases/:id", authChecks.checkPurchase, async (req, res) => {
   var body = req.body;
   let user;
   if (body.apy_key === process.env.API_KEY) {
     user = body.korisnicki_racun;
+    if (!undefinedAndCheck(user)) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
   } else {
     user = req.user;
-    if (!undefinedAndCheck(user, body.stanje_id)) {
+    if (!undefinedAndCheck(user)) {
       res.json({ error: "Wrong params" });
       return;
     }
@@ -68,6 +72,10 @@ router.put("/purchases/:id", async (req, res) => {
       res.json({ error: "Wrong params" });
       return;
     }
+  }
+  if (!undefinedAndCheck(body.stanje_id)) {
+    res.json({ error: "Wrong params" });
+    return;
   }
 
   let purchase = {};
@@ -79,21 +87,7 @@ router.put("/purchases/:id", async (req, res) => {
   body.stanje_id != null
     ? (purchase.stanje_id = htmlEncode(body.stanje_id))
     : (purchase.stanje_id = body.stanje_id);
-  if (body.apy_key !== process.env.API_KEY) {
-    await queries.getPurchaseById(req.params.id, (error, results) => {
-      if (!req.user || results[0].korisnicki_racun != user) {
-        res.json({ error: "You are not allowed to delete that purchase" });
-        return;
-      } else {
-        updatePurchase(purchase, res);
-      }
-    });
-  } else {
-    updatePurchase(purchase, res);
-  }
-});
 
-function updatePurchase(purchase, res) {
   queries.updatePurchaseById(purchase, (error, data) => {
     if (error) {
       res.writeHead("404");
@@ -107,7 +101,7 @@ function updatePurchase(purchase, res) {
     }
     res.send();
   });
-}
+});
 
 router.post("/purchases", async (req, res) => {
   var body = req.body;
