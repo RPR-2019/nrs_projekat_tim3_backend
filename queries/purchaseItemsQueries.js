@@ -3,7 +3,7 @@ const connection = require("../database.js");
 
 var queries = (function () {
   function getPurchaseItemsByIdImpl(id, callback) {
-    getPurchaseById(id, (error, data) => {
+    getPurchaseByIdImpl(id, (error, data) => {
       if (error) {
         callback(error);
       } else if (data[0] == null) {
@@ -48,7 +48,7 @@ var queries = (function () {
     });
   }
   function deleteAllPurchaseItemsByIdImpl(purchaseId, callback) {
-    getPurchaseById(purchaseId, (error, data) => {
+    getPurchaseByIdImpl(purchaseId, (error, data) => {
       if (error) {
         callback(error);
       } else if (data[0] == null) {
@@ -79,7 +79,7 @@ var queries = (function () {
   }
 
   function checkAll(purchaseId, itemId, callback, resolve) {
-    getPurchaseById(purchaseId, (error, data) => {
+    getPurchaseByIdImpl(purchaseId, (error, data) => {
       if (error) {
         callback(error);
         return;
