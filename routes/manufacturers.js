@@ -7,7 +7,7 @@ const queries = require("../queries/manufacturersQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
-router.get("/manufacturers", (req, res) => {
+router.get("/manufacturers", authChecks.authRole(ROLE.KUPAC), (req, res) => {
   queries.getManufacturers((data) => res.json(data));
 });
 
@@ -15,7 +15,7 @@ router.get(
   //TODO - add html render
   "/manufacturers/add",
   authChecks.checkAuthenticated,
-  authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.KUPAC),
   async (req, res) => {
     res.render("addUser.ejs");
   }
@@ -23,8 +23,7 @@ router.get(
 
 router.get(
   "/manufacturers/:id",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.KUPAC),
   (req, res) => {
     queries.getManufacturerById(req.params.id, (data) => {
       if (data == null) {
@@ -41,8 +40,7 @@ router.get(
 
 router.delete(
   "/manufacturers/:id",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.ADMIN),
   (req, res) => {
     queries.deleteManufacturerById(req.params.id, (error, results, fields) => {
       if (error) {
@@ -59,8 +57,7 @@ router.delete(
 
 router.put(
   "/manufacturers/:id",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.ADMIN),
   async (req, res) => {
     let manufacturer = {};
     manufacturer.id = req.params.id;
@@ -81,27 +78,31 @@ router.put(
   }
 );
 
-router.post("/manufacturers", async (req, res) => {
-  try {
-    let manufacturer = {};
-    manufacturer.id = req.params.id;
-    if (req.body.naziv) {
-      manufacturer.naziv = htmlEncode(req.body.naziv);
-    }
-    queries.addManufacturer(manufacturer, (data) => {
-      if (data == null) {
-        res.writeHead("404");
-        res.write(JSON.stringify({ error: "Not found" }));
-      } else {
-        res.writeHead("200");
-        res.write(JSON.stringify(data));
+router.post(
+  "/manufacturers",
+  authChecks.authRole(ROLE.ADMIN),
+  async (req, res) => {
+    try {
+      let manufacturer = {};
+      manufacturer.id = req.params.id;
+      if (req.body.naziv) {
+        manufacturer.naziv = htmlEncode(req.body.naziv);
       }
-      res.send();
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send();
+      queries.addManufacturer(manufacturer, (data) => {
+        if (data == null) {
+          res.writeHead("404");
+          res.write(JSON.stringify({ error: "Not found" }));
+        } else {
+          res.writeHead("200");
+          res.write(JSON.stringify(data));
+        }
+        res.send();
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send();
+    }
   }
-});
+);
 
 module.exports = router;

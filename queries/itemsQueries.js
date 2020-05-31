@@ -45,6 +45,10 @@ var queries = (function () {
       query += "proizvodjac=?,";
       params.push(item.proizvodjac);
     }
+    if (item.cijena !== undefined) {
+      query += "cijena=?,";
+      params.push(item.cijena);
+    }
     if (item.kategorija !== undefined) {
       query += "kategorija=?";
       params.push(item.kategorija);
@@ -65,10 +69,10 @@ var queries = (function () {
 
   function addItemImpl(item, callback) {
     let query =
-      "INSERT INTO proizvodi (naziv, proizvodjac, kategorija) VALUES (?,?,?)";
+      "INSERT INTO proizvodi (naziv, proizvodjac, kategorija, cijena) VALUES (?,?,?,?)";
     connection.query(
       query,
-      [item.naziv, item.proizvodjac, item.kategorija],
+      [item.naziv, item.proizvodjac, item.kategorija, item.cijena],
       callback
     );
   }

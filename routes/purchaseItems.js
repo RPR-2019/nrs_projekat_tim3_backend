@@ -7,25 +7,19 @@ const queries = require("../queries/purchaseItemsQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
-router.get(
-  "/purchases/:id/items",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
-  (req, res) => {
-    queries.getPurchaseItemsById(req.params.id, (error, results) => {
-      if (error) {
-        res.json(error);
-      } else {
-        res.json(results);
-      }
-    });
-  }
-);
+router.get("/purchases/:id/items", authChecks.checkPurchase, (req, res) => {
+  queries.getPurchaseItemsById(req.params.id, (error, results) => {
+    if (error) {
+      res.json(error);
+    } else {
+      res.json(results);
+    }
+  });
+});
 
 router.post(
   "/purchases/:id/items/:itemId",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.checkPurchase,
   (req, res) => {
     let purchaseId = req.params.id;
     let itemId = req.params.itemId;
@@ -57,8 +51,7 @@ router.post(
 
 router.delete(
   "/purchases/:id/items/:itemId",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.checkPurchase,
   (req, res) => {
     let purchaseId = req.params.id;
     let itemId = req.params.itemId;
@@ -80,34 +73,28 @@ router.delete(
   }
 );
 
-router.delete(
-  "/purchases/:id/items",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
-  (req, res) => {
-    let purchaseId = req.params.id;
-    if (!purchaseId) {
-      res.json({ error: "Invalid params." });
-      return;
-    }
-    queries.deleteAllPurchaseItemsById(purchaseId, function (
-      error,
-      results,
-      fields
-    ) {
-      if (error) {
-        res.json(error);
-      } else {
-        res.json({ success: "Purchase items deleted" });
-      }
-    });
+router.delete("/purchases/:id/items", authChecks.checkPurchase, (req, res) => {
+  let purchaseId = req.params.id;
+  if (!purchaseId) {
+    res.json({ error: "Invalid params." });
+    return;
   }
-);
+  queries.deleteAllPurchaseItemsById(purchaseId, function (
+    error,
+    results,
+    fields
+  ) {
+    if (error) {
+      res.json(error);
+    } else {
+      res.json({ success: "Purchase items deleted" });
+    }
+  });
+});
 
 router.put(
   "/purchases/:id/items/:itemId",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.checkPurchase,
   (req, res) => {
     let purchaseId = req.params.id;
     let itemId = req.params.itemId;
