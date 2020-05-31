@@ -22,7 +22,7 @@ router.get(
   }
 );
 
-router.get("/purchases/:id", (req, res) => {
+router.get("/purchases/:id", authChecks.checkPurchase, (req, res) => {
   queries.getPurchaseById(req.params.id, (error, data) => {
     if (error) {
       res.json(error);
@@ -37,23 +37,8 @@ router.get("/purchases/:id", (req, res) => {
   });
 });
 
-router.delete("/purchases/:id", (req, res) => {
-  id = req.params.id;
-  if (body.apy_key !== process.env.API_KEY) {
-    queries.getPurchaseById(id, (error, results) => {
-      if (results[0].korisnicki_racun != req.user.id) {
-        res.json({ error: "You are not allowed to delete that purchase" });
-      } else {
-        deletePurchaseById(id, res);
-      }
-    });
-  } else {
-    deletePurchaseById(id, res);
-  }
-});
-
-function deletePurchaseById(id, res) {
-  queries.deletePurchaseById(id, (error, results, fields) => {
+router.delete("/purchases/:id", authChecks.checkPurchase, (req, res) => {
+  queries.deletePurchaseById(req.params.id, (error, results, fields) => {
     if (error) {
       res.writeHead(500);
       res.write(
@@ -65,7 +50,7 @@ function deletePurchaseById(id, res) {
     }
     res.send();
   });
-}
+});
 
 router.put("/purchases/:id", async (req, res) => {
   var body = req.body;
