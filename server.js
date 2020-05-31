@@ -97,7 +97,6 @@ app.all(
 app.all(
   ["/manufacturers", "/manufacturers*"],
   authChecks.checkAuthenticated,
-  authChecks.authRole(ROLE.ADMIN),
   require("./routes/manufacturers")
 );
 
@@ -118,28 +117,28 @@ app.all(
 app.all(
   ["/warehouses", "/warehouses*"],
   authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.UPOSLENIK),
   require("./routes/warehouses")
 );
 
 app.all(
   ["/suppliers", "/suppliers*"],
   authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.UPOSLENIK),
   require("./routes/suppliers")
 );
 
 app.all(
   ["/orders", "/orders*"],
   authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.UPOSLENIK),
   require("./routes/orders")
 );
 
 app.all(
   ["/purchases", "/purchases*"],
   authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
+  authChecks.authRole(ROLE.KUPAC),
   require("./routes/purchases")
 );
 
