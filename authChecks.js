@@ -31,10 +31,30 @@ var authChecks = (function () {
     };
   }
 
+  function checkPurchaseImpl(req, res, next) {
+    if (!req.user || !req.user.id) {
+      res.json({ error: "Not allowed" });
+    } else if (
+      req.body.apy_key === process.env.API_KEY ||
+      res.user.pravo_pristupa == 1
+    ) {
+      next();
+    } else {
+      queries.getPurchaseById(req.params.id, (error, results) => {
+        if (results[0].korisnicki_racun != res.body.id) {
+          res.json({ error: "Not allowed" });
+        } else {
+          next();
+        }
+      });
+    }
+  }
+
   return {
     checkAuthenticated: checkAuthenticatedImpl,
     checkNotAuthenticated: checkNotAuthenticatedImpl,
     authRole: authRoleImpl,
+    checkPurchase: checkPurchaseImpl,
   };
 })();
 
