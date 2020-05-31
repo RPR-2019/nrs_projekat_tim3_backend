@@ -42,25 +42,35 @@ router.get(
   }
 );
 
-router.delete(
-  "/purchases/:id",
-  //authChecks.checkAuthenticated,
-  //authChecks.authRole(ROLE.ADMIN),
-  (req, res) => {
-    queries.deletePurchaseById(req.params.id, (error, results, fields) => {
-      if (error) {
-        res.writeHead(500);
-        res.write(
-          JSON.stringify({ error: "Purchase not found or has dependency" })
-        );
+router.delete("/purchases/:id", (req, res) => {
+  id = req.params.id;
+  if (body.apy_key !== process.env.API_KEY) {
+    queries.getPurchaseById(id, (error, results) => {
+      if (results[0].korisnicki_racun != req.user.id) {
+        res.json({ error: "You are not allowed to delete that purchase" });
       } else {
-        res.writeHead(200);
-        res.write(JSON.stringify({ success: "Purchase deleted" }));
+        deletePurchaseById(id, res);
       }
-      res.send();
     });
+  } else {
+    deletePurchaseById(id, res);
   }
-);
+});
+
+function deletePurchaseById(id, res) {
+  queries.deletePurchaseById(id, (error, results, fields) => {
+    if (error) {
+      res.writeHead(500);
+      res.write(
+        JSON.stringify({ error: "Purchase not found or has dependency" })
+      );
+    } else {
+      res.writeHead(200);
+      res.write(JSON.stringify({ success: "Purchase deleted" }));
+    }
+    res.send();
+  });
+}
 
 router.put(
   "/purchases/:id",
