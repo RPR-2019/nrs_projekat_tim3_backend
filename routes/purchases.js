@@ -99,7 +99,6 @@ router.put(
 
 router.post("/purchases", async (req, res) => {
   var body = req.body;
-
   let user;
   if (req.body.apy_key === process.env.API_KEY) {
     user = body.korisnicki_racun;
@@ -121,9 +120,9 @@ router.post("/purchases", async (req, res) => {
     ? (purchase.korisnicki_racun = htmlEncode(user))
     : (purchase.korisnicki_racun = user);
 
-  req.body.stanje_id !== null
-    ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
-    : (purchase.stanje_id = req.body.stanje_id);
+  body.stanje_id !== null
+    ? (purchase.stanje_id = htmlEncode(body.stanje_id))
+    : (purchase.stanje_id = body.stanje_id);
 
   purchase.purchaseItems = body.purchaseItems;
   queries.addPurchase(purchase, function (error, results, fields) {
