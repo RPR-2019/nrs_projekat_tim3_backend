@@ -99,7 +99,14 @@ router.put(
 
 router.post("/purchases", async (req, res) => {
   var body = req.body;
-  if (undefinedOrCheck(body.korisnicki_racun, body.stanje_id)) {
+
+  let user;
+  if (req.body.apy_key === process.env.API_KEY) {
+    user = body.korisnicki_racun;
+  } else {
+    user = req.user.id;
+  }
+  if (undefinedOrCheck(body.korisnicki_racun, user)) {
     res.json({ error: "Wrong params" });
     return;
   }
@@ -110,9 +117,9 @@ router.post("/purchases", async (req, res) => {
     }
   });
   let purchase = {};
-  req.body.korisnicki_racun !== null
-    ? (purchase.korisnicki_racun = htmlEncode(req.body.korisnicki_racun))
-    : (purchase.korisnicki_racun = req.body.korisnicki_racun);
+  user !== null
+    ? (purchase.korisnicki_racun = htmlEncode(user))
+    : (purchase.korisnicki_racun = user);
 
   req.body.stanje_id !== null
     ? (purchase.stanje_id = htmlEncode(req.body.stanje_id))
