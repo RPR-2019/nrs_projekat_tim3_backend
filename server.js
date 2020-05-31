@@ -20,7 +20,6 @@ let httpx = require("./httpx");
 
 const initializePassport = require("./passport-config");
 const authChecks = require("./authChecks.js");
-const connection = require("./database.js");
 const { ROLE } = require("./roles.js");
 const queries = require("./queries/usersQueries.js");
 
@@ -33,7 +32,7 @@ initializePassport(
   passport,
   async function (email, callback) {
     console.log("email" + email);
-    queries.getUsers(connection, function (data) {
+    queries.getUsers((data) => {
       callback(
         data.find(function (user) {
           return user.email === email;
@@ -42,7 +41,7 @@ initializePassport(
     });
   },
   function (id, callback) {
-    queries.getUserById(connection, id, callback);
+    queries.getUserById(id, callback);
   }
 );
 
