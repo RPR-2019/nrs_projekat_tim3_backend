@@ -363,3 +363,16 @@ INSERT INTO stanja_kupovine(stanje) VALUES("otpremljena");
 INSERT INTO stanja_kupovine(stanje) VALUES("blokirana");
 INSERT INTO stanja_kupovine(stanje) VALUES("odbijena");
 INSERT INTO stanja_kupovine(stanje) VALUES("obrisana");
+
+INSERT INTO proizvodjaci(1,"Proizvodjac1")
+INSERT INTO proizvodjaci(2,"proizvodjac2")
+INSERT INTO kategorije VALUES(1,"kat1",null)
+INSERT INTO kategorije VALUES(2,"kat2",null)
+INSERT INTO kategorije VALUES(3,"kat3",1)
+ALTER TABLE proizvodi_skladista ADD status TEXT NOT NULL
+ALTER TABLE proizvodi ADD cijena INT NOT NULL
+INSERT INTO proizvodi VALUES(1,"proizvod1",1,2,50);
+INSERT INTO proizvodi VALUES(2,"proizvod2",1,1,100);
+INSERT INTO proizvodi VALUES(3,"proizvod3",2,3,20);
+INSERT INTO proizvodi VALUES(4,"proizvod4",1,1,80);
+INSERT INTO proizvodi VALUES(5,"proizvod5",2,1,120);
