@@ -63,6 +63,11 @@ router.put("/items/:id", authChecks.authRole(ROLE.ADMIN), async (req, res) => {
       ? (item.kategorija = htmlEncode(req.body.kategorija))
       : (item.kategorija = req.body.kategorija);
   }
+  if (req.body.cijena !== undefined) {
+    req.body.cijena !== null
+      ? (item.cijena = htmlEncode(req.body.cijena))
+      : (item.cijena = req.body.cijena);
+  }
   queries.updateItemById(item, (data, error) => {
     if (error) {
       res.writeHead("404");
@@ -95,6 +100,11 @@ router.post("/items", authChecks.authRole(ROLE.ADMIN), async (req, res) => {
       req.body.kategorija !== null
         ? (item.kategorija = htmlEncode(req.body.kategorija))
         : (item.kategorija = req.body.kategorija);
+    }
+    if (req.body.cijena !== undefined) {
+      req.body.cijena !== null
+        ? (item.cijena = htmlEncode(req.body.cijena))
+        : (item.cijena = req.body.cijena);
     }
     queries.addItem(item, function (error, results, fields) {
       if (error) {
