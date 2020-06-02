@@ -25,19 +25,13 @@ var queries = (function () {
     });
   }
 
-  function addWarehouseItemsByIdImpl(
-    connection,
-    warehouseId,
-    itemId,
-    quantity,
-    callback
-  ) {
+  function addWarehouseItemsByIdImpl(warehouseId, itemId, quantity, callback) {
     warehousesQ.getWarehouseById(warehouseId, (data) => {
       if (data == null) {
         callback(1);
       } else {
-        itemQ.getItemById(itemId, (data) => {
-          if (data == null) {
+        itemQ.getItemById(itemId, (innerData) => {
+          if (innerData == null) {
             callback(1);
           } else {
             connection.query(
@@ -52,12 +46,7 @@ var queries = (function () {
     });
   }
 
-  function deleteWarehouseItemsByIdImpl(
-    connection,
-    warehouseId,
-    itemId,
-    callback
-  ) {
+  function deleteWarehouseItemsByIdImpl(warehouseId, itemId, callback) {
     warehousesQ.getWarehouseById(warehouseId, (data) => {
       if (data == null) {
         callback(1);
