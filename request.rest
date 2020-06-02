@@ -1,6 +1,10 @@
 ###
-GET http://localhost:8080/orders/15/items
+GET  http://localhost:8080/warehouses
+content-Type: application/json
 
+{
+    "apy_key": "AIzaSyCeJLveAW9reXowkdJCjlDoMf4mNpn5pzc"
+}
 
 ###
 
@@ -11,20 +15,46 @@ content-Type: application/json
     "supplierId": "1"
 }
 ###
-POST http://localhost:8080/orders
+POST http://localhost:8080/warehouses/1/items/1
 content-Type: application/json
 
 {
-    "korisnicki_racun" : "1",
-    "skladiste_id": "1",
-    "datum_isporuke": "2020-05-19",
-    "orderItems": [
-        {
-            "supplierId": "1",
-            "quantity": "7",
-            "itemId": "5"
-        }
-    ]
+    "apy_key": "AIzaSyCeJLveAW9reXowkdJCjlDoMf4mNpn5pzc",
+    "quantity": "54"
+}
+###
+
+POST http://localhost:8080/suppliers/1/items/7
+
+
+###
+
+PUT https://nrs-backend.herokuapp.com/suppliers/11
+content-Type: application/json
+
+{
+    "apy_key": "AIzaSyCeJLveAW9reXowkdJCjlDoMf4mNpn5pzc",
+    "naziv" : "Violeta"
+}
+
+###
+GET http://localhost:8080/purchases
+
+
+###
+
+DELETE http://localhost:8080/purchases/2
+content-Type: application/json
+
+{
+    "supplierId": "1"
+}
+###
+PUT http://localhost:8080/purchases/1
+content-Type: application/json
+
+{
+    "korisnicki_racun" : "1"
 }
 ###
 

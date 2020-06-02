@@ -43,12 +43,7 @@ var queries = (function () {
     });
   }
 
-  function deleteSupplierItemsByIdImpl(
-    connection,
-    supplierId,
-    itemId,
-    callback
-  ) {
+  function deleteSupplierItemsByIdImpl(supplierId, itemId, callback) {
     suppliersQ.getSupplierById(supplierId, (data) => {
       if (data == null) {
         callback(1);

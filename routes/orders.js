@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const authChecks = require("../authChecks.js");
 const flash = require("express-flash");
-const connection = require("../database.js");
 const queries = require("../queries/ordersQueries.js");
 const orderItemsQ = require("../queries/orderItemsQueries.js");
 const { ROLE } = require("../roles.js");
