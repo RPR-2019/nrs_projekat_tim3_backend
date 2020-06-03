@@ -138,7 +138,18 @@ app.all(
   authChecks.authRole(ROLE.KUPAC),
   require("./routes/purchases")
 );
-
+app.all(
+  ["/shop", "/shop"],
+  authChecks.checkAuthenticated,
+  authChecks.authRole(ROLE.ADMIN),
+  require("./routes/shop")
+);
+app.all(
+  ["/cart", "/cart"],
+  authChecks.checkAuthenticated,
+  authChecks.authRole(ROLE.ADMIN),
+  require("./routes/cart")
+);
 //app.listen(process.env.PORT || 8080);
 
 //http(s) proxy
