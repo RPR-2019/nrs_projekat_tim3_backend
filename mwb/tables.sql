@@ -365,15 +365,95 @@ INSERT INTO stanja_kupovine(stanje) VALUES("blokirana");
 INSERT INTO stanja_kupovine(stanje) VALUES("odbijena");
 INSERT INTO stanja_kupovine(stanje) VALUES("obrisana");
 
-INSERT INTO proizvodjaci(1,"Proizvodjac1")
-INSERT INTO proizvodjaci(2,"proizvodjac2")
-INSERT INTO kategorije VALUES(1,"kat1",null)
-INSERT INTO kategorije VALUES(2,"kat2",null)
-INSERT INTO kategorije VALUES(3,"kat3",1)
-ALTER TABLE proizvodi_skladista ADD status TEXT NOT NULL
-ALTER TABLE proizvodi ADD cijena INT NOT NULL
+INSERT INTO proizvodjaci VALUES(1,"proizvodjac1");
+INSERT INTO proizvodjaci VALUES(2,"proizvodjac2");
+INSERT INTO proizvodjaci VALUES(3,"proizvodjac3");
+INSERT INTO proizvodjaci VALUES(4,"proizvodjac4");
+INSERT INTO proizvodjaci VALUES(5,"proizvodjac5");
+
+INSERT INTO kategorije VALUES(1,"kat1",null);
+INSERT INTO kategorije VALUES(2,"kat2",null);
+INSERT INTO kategorije VALUES(3,"kat3",1);
+
+
 INSERT INTO proizvodi VALUES(1,"proizvod1",1,2,50);
 INSERT INTO proizvodi VALUES(2,"proizvod2",1,1,100);
 INSERT INTO proizvodi VALUES(3,"proizvod3",2,3,20);
 INSERT INTO proizvodi VALUES(4,"proizvod4",1,1,80);
 INSERT INTO proizvodi VALUES(5,"proizvod5",2,1,120);
+INSERT INTO proizvodi VALUES(6,"proizvod5",3,2,50);
+INSERT INTO proizvodi VALUES(7,"proizvod7",1,1,130);
+INSERT INTO proizvodi VALUES(8,"proizvod8",2,3,40);
+INSERT INTO proizvodi VALUES(9,"proizvod9",4,1,60);
+INSERT INTO proizvodi VALUES(10,"proizvod10",2,3,220);
+
+
+INSERT INTO skladista VALUES(1,"skladiste1","lokacija1");
+INSERT INTO skladista VALUES(2,"skladiste2","lokacija2");
+INSERT INTO skladista VALUES(3,"skladiste3","lokacija3");
+
+INSERT INTO osobe VALUES(2,"ime2","prezime2","(+387)61/145-426","2020-06-30",201238123123,"Sarajevo,Mihrivode");
+INSERT INTO osobe VALUES(3,"ime3","prezime3","(+387)62/155-426","2020-04-30",201638423123,"Sarajevo,Kovaci");
+INSERT INTO osobe VALUES(4,"ime4","prezime4","(+387)62/165-422","2020-02-21",2012381234123,"Sarajevo,Bistrik");
+INSERT INTO osobe VALUES(5,"ime5","prezime5","(+387)61/166-412","2020-06-21",1012381234123,"Sarajevo,Pofalici");
+INSERT INTO osobe VALUES(6,"Ime6","Prezime6","(+387)62/146-126","2019-07-03",123456789,"Sarajevo");
+INSERT INTO osobe VALUES(7,"Ime7","Prezime7","(+387)63/146-126","2019-03-03",12345789,"Sarajevo");
+INSERT INTO osobe VALUES(8,"Ime8","Prezime8","(+387)61/156-121","2019-04-03",12346789,"Sarajevo");
+INSERT INTO osobe VALUES(9,"Ime9","Prezime9","(+387)61/146-116","2019-05-03",12345679,"Sarajevo");
+INSERT INTO osobe VALUES(10,"Ime10","Prezime10","(+387)62/116-126","2019-06-03",12456789,"Sarajevo");
+
+
+INSERT INTO proizvodi_skladista VALUES(4,1,20);
+INSERT INTO proizvodi_skladista VALUES(5,1,2);
+INSERT INTO proizvodi_skladista VALUES(6,1,1);
+INSERT INTO proizvodi_skladista VALUES(7,2,5);
+INSERT INTO proizvodi_skladista VALUES(8,2,40);
+INSERT INTO proizvodi_skladista VALUES(9,2,30);
+INSERT INTO proizvodi_skladista VALUES(1,3,10);
+INSERT INTO proizvodi_skladista VALUES(2,3,15);
+INSERT INTO proizvodi_skladista VALUES(3,3,40);
+
+
+INSERT INTO dobavljaci VALUES(1,"dobavljac1");
+INSERT INTO dobavljaci VALUES(2,"dobavljac2");
+INSERT INTO dobavljaci VALUES(3,"dobavljac3");
+INSERT INTO dobavljaci VALUES(4,"dobavljac4");
+
+INSERT INTO proizvodi_dobavljaca VALUES(3,4);
+INSERT INTO proizvodi_dobavljaca VALUES(4,4);
+INSERT INTO proizvodi_dobavljaca VALUES(2,3);
+
+INSERT INTO korisnicki_racuni VALUES(2,2,2,"asd","mail@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(3,3,1,"abc","mail2@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(4,4,3,"qwer","mail3@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(5,5,2,"wwww","mail4@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(6,6,3,"asd123","mail6@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(7,7,1,"abc","mail7@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(8,8,2,"qwerr","mail8@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(9,9,2,"wwwww","mail9@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(10,10,2,"wwwww","mail10@hotmail.com");
+
+
+INSERT INTO kupovine VALUES(1,3,6);
+INSERT INTO kupovine VALUES(2,2,2);
+INSERT INTO kupovine VALUES(3,1,3);
+INSERT INTO kupovine VALUES(4,5,1);
+INSERT INTO kupovine VALUES(5,4,4);
+INSERT INTO kupovine VALUES(6,6,5);
+INSERT INTO kupovine VALUES(7,7,7);
+
+
+INSERT INTO proizvodi_kupovine VALUES(4,1,5);
+INSERT INTO proizvodi_kupovine VALUES(5,2,10);
+INSERT INTO proizvodi_kupovine VALUES(6,3,25);
+INSERT INTO proizvodi_kupovine VALUES(7,4,15);
+INSERT INTO proizvodi_kupovine VALUES(8,5,5);
+
+INSERT INTO narudzbe VALUES(1,1,1,"2020-03-22","2020-04-10");
+INSERT INTO narudzbe VALUES(2,2,2,"2019-07-22","2019-09-10");
+INSERT INTO narudzbe VALUES(3,3,3,"2020-01-23","2020-03-14");
+INSERT INTO narudzbe VALUES(4,4,1,"2020-02-10","2020-04-13");
+INSERT INTO narudzbe VALUES(5,5,2,"2020-03-14","2020-04-11");
+INSERT INTO narudzbe VALUES(6,6,3,"2020-03-26","2020-04-12");
+
+INSERT INTO artikli_narudzbe VALUES(3,2,1,5);
