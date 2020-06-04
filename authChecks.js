@@ -33,7 +33,10 @@ var authChecks = (function () {
   }
 
   function checkPurchaseImpl(req, res, next) {
-    if (!req.user || !req.user.id || !req.user.pravo_pristupa) {
+    if (
+      (!req.user || !req.user.id || !req.user.pravo_pristupa) &&
+      !req.body.apy_key
+    ) {
       res.json({ error: "Not allowed" });
     } else if (
       req.body.apy_key === process.env.API_KEY ||
