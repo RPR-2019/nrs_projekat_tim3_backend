@@ -7,14 +7,13 @@ const queriesItems = require("../queries/purchaseItemsQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
-router.get("/purchases", (req, res) => {
+router.get("/purchases", authChecks.checkPurchase, (req, res) => {
   queries.getPurchases((data) => res.json(data));
 });
 
 router.get(
   //TODO - add html render
   "/purchases/add",
-  authChecks.checkAuthenticated,
   authChecks.authRole(ROLE.ADMIN),
   async (req, res) => {
     res.render("addUser.ejs");
@@ -107,13 +106,23 @@ router.post("/purchases", async (req, res) => {
   let user;
   if (body.apy_key === process.env.API_KEY) {
     user = body.korisnicki_racun;
+    if (undefinedOrCheck(user)) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
   } else {
-    user = req.user.id;
+    user = req.user;
+    if (undefinedOrCheck(user)) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
+    user = user.id;
+    if (undefinedOrCheck(user)) {
+      res.json({ error: "Wrong params" });
+      return;
+    }
   }
-  if (undefinedOrCheck(body.korisnicki_racun, user)) {
-    res.json({ error: "Wrong params" });
-    return;
-  }
+
   body.purchaseItems.forEach((element) => {
     if (undefinedOrCheck(element.quantity, element.itemId)) {
       res.json({ error: "Wrong params" });
