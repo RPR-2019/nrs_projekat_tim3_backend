@@ -7,7 +7,7 @@ const queriesItems = require("../queries/purchaseItemsQueries.js");
 const { ROLE } = require("../roles.js");
 var htmlEncode = require("js-htmlencode").htmlEncode;
 
-router.get("/purchases", authChecks.checkPurchase, (req, res) => {
+router.get("/purchases", authChecks.authRole(ROLE.ADMIN), (req, res) => {
   queries.getPurchases((data) => res.json(data));
 });
 
