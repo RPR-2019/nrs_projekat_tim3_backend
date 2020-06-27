@@ -423,15 +423,15 @@ INSERT INTO proizvodi_dobavljaca VALUES(3,4);
 INSERT INTO proizvodi_dobavljaca VALUES(4,4);
 INSERT INTO proizvodi_dobavljaca VALUES(2,3);
 
-INSERT INTO korisnicki_racuni VALUES(2,2,2,"asd","mail@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(3,3,1,"abc","mail2@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(4,4,3,"qwer","mail3@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(5,5,2,"wwww","mail4@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(6,6,3,"asd123","mail6@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(7,7,1,"abc","mail7@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(8,8,2,"qwerr","mail8@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(9,9,2,"wwwww","mail9@hotmail.com");
-INSERT INTO korisnicki_racuni VALUES(10,10,2,"wwwww","mail10@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(2,2,2,"asdEf25","mail@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(3,3,1,"abcD24","mail2@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(4,4,3,"Qwer123","mail3@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(5,5,2,"wwwwW4","mail4@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(6,6,3,"Asd123","mail6@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(7,7,1,"abcC123","mail7@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(8,8,2,"qwerrR45","mail8@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(9,9,2,"wwwwwAB23","mail9@hotmail.com");
+INSERT INTO korisnicki_racuni VALUES(10,10,2,"wwwwwA4","mail10@hotmail.com");
 
 
 INSERT INTO kupovine VALUES(1,3,6);
@@ -457,3 +457,11 @@ INSERT INTO narudzbe VALUES(5,5,2,"2020-03-14","2020-04-11");
 INSERT INTO narudzbe VALUES(6,6,3,"2020-03-26","2020-04-12");
 
 INSERT INTO artikli_narudzbe VALUES(3,2,1,5);
+
+INSERT into proizvodi_dobavljaca VALUES(1,1);
+INSERT into proizvodi_dobavljaca VALUES(5,2);
+INSERT into proizvodi_dobavljaca VALUES(6,3);
+INSERT into proizvodi_dobavljaca VALUES(7,1);
+INSERT into proizvodi_dobavljaca VALUES(8,2);
+INSERT into proizvodi_dobavljaca VALUES(9,1);
+INSERT into proizvodi_dobavljaca VALUES(10,3);
