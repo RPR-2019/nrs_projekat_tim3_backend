@@ -392,15 +392,15 @@ INSERT INTO skladista VALUES(1,"skladiste1","lokacija1");
 INSERT INTO skladista VALUES(2,"skladiste2","lokacija2");
 INSERT INTO skladista VALUES(3,"skladiste3","lokacija3");
 
-INSERT INTO osobe VALUES(2,"ime2","prezime2","(+387)61/145-426","2020-06-30",201238123123,"Sarajevo,Mihrivode");
-INSERT INTO osobe VALUES(3,"ime3","prezime3","(+387)62/155-426","2020-04-30",201638423123,"Sarajevo,Kovaci");
-INSERT INTO osobe VALUES(4,"ime4","prezime4","(+387)62/165-422","2020-02-21",2012381234123,"Sarajevo,Bistrik");
+INSERT INTO osobe VALUES(2,"ime2","prezime2","(+387)61/145-426","2020-06-30",2012381234123,"Sarajevo,Mihrivode");
+INSERT INTO osobe VALUES(3,"ime3","prezime3","(+387)62/155-426","2020-04-30",2016328423123,"Sarajevo,Kovaci");
+INSERT INTO osobe VALUES(4,"ime4","prezime4","(+387)62/165-422","2020-02-21",2012383123413,"Sarajevo,Bistrik");
 INSERT INTO osobe VALUES(5,"ime5","prezime5","(+387)61/166-412","2020-06-21",1012381234123,"Sarajevo,Pofalici");
-INSERT INTO osobe VALUES(6,"Ime6","Prezime6","(+387)62/146-126","2019-07-03",123456789,"Sarajevo");
-INSERT INTO osobe VALUES(7,"Ime7","Prezime7","(+387)63/146-126","2019-03-03",12345789,"Sarajevo");
-INSERT INTO osobe VALUES(8,"Ime8","Prezime8","(+387)61/156-121","2019-04-03",12346789,"Sarajevo");
-INSERT INTO osobe VALUES(9,"Ime9","Prezime9","(+387)61/146-116","2019-05-03",12345679,"Sarajevo");
-INSERT INTO osobe VALUES(10,"Ime10","Prezime10","(+387)62/116-126","2019-06-03",12456789,"Sarajevo");
+INSERT INTO osobe VALUES(6,"Ime6","Prezime6","(+387)62/146-126","2019-07-03",1234567891611,"Sarajevo");
+INSERT INTO osobe VALUES(7,"Ime7","Prezime7","(+387)63/146-126","2019-03-03",1234578923475,"Sarajevo");
+INSERT INTO osobe VALUES(8,"Ime8","Prezime8","(+387)61/156-121","2019-04-03",1234678134519,"Sarajevo");
+INSERT INTO osobe VALUES(9,"Ime9","Prezime9","(+387)61/146-116","2019-05-03",1234561784379,"Sarajevo");
+INSERT INTO osobe VALUES(10,"Ime10","Prezime10","(+387)62/116-126","2019-06-03",124567891983,"Sarajevo");
 
 
 INSERT INTO proizvodi_skladista VALUES(4,1,20);
